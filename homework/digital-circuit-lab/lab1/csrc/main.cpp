@@ -1,9 +1,9 @@
 #include <nvboard.h>
-#include <Vmux21.h>
+#include <Vmux2bit41.h>
 
 static TOP_NAME dut;
 
-void nvboard_bind_all_pins(Vmux21* top);
+void nvboard_bind_all_pins(Vmux2bit41* top);
 
 static void single_cycle() {
   dut.eval();

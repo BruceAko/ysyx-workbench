@@ -53,11 +53,17 @@ module MuxKeyWithDefault #(NR_KEY = 2, KEY_LEN = 1, DATA_LEN = 1) (
     MuxKeyInternal #(NR_KEY, KEY_LEN, DATA_LEN, 1) i0 (out, key, default_out, lut);
 endmodule
 
-module mux21(a,b,s,y);
-    input   a,b,s;
-    output  y;
-    MuxKey #(2, 1, 1) i0 (y, s, {
-                              1'b0, a,
-                              1'b1, b
-                          });
+module mux2bit41(X0,X1,X2,X3,Y,F);
+    input  [1:0] X0;
+    input  [1:0] X1;
+    input  [1:0] X2;
+    input  [1:0] X3;
+    input  [1:0] Y;
+    output [1:0] F;
+    MuxKeyWithDefault #(4, 2, 2) i0 (F, Y, 2'b00, {
+                                         2'b00, X0,
+                                         2'b01, X1,
+                                         2'b10, X2,
+                                         2'b11, X3
+                                     });
 endmodule
