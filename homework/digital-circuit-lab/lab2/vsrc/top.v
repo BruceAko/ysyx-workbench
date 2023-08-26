@@ -6,14 +6,15 @@ module encode83(x,en,y,h);
     integer i;
 
     always @ (*) begin
-        if(x == 8'b00000000)
-            y = 0;
-        else
-            y[3] = 1;
         if(en == 1) begin
-            for (i = 0; i <= 7 ; i++) begin
-                if (x[i] == 1)
-                    y[2:0] = i[2:0];
+            if(x == 8'b00000000)
+                y = 0;
+            else begin
+                y[3] = 1;
+                for (i = 0; i <= 7 ; i++) begin
+                    if (x[i] == 1)
+                        y[2:0] = i[2:0];
+                end
             end
         end
         else
