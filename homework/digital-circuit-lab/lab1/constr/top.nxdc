@@ -1,0 +1,6 @@
+top=mux21
+
+y LD0
+a SW0
+b SW1
+s SW2
