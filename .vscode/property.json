@@ -1,0 +1,19 @@
+{
+	"toolChain": "xilinx",
+	"prjName": {
+		"PL": "template"
+	},
+	"arch": {
+		"prjPath": "",
+		"hardware": {
+			"src": "./npc/vsrc",
+			"sim": "./npc/csrc",
+			"data": ""
+		}
+	},
+	"soc": {
+		"core": "none"
+	},
+	"enableShowLog": false,
+	"device": "none"
+}
