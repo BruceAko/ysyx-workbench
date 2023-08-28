@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/npc/build/obj_dir/*",
+                "abstract-machine/am/include/arch/*",
+                "abstract-machine/am/include/*",
+                "${workspaceFolder}/nemu/include/**",
+                "${workspaceFolder}/navy-apps/**",
+                "nanos-lite/include/*",
+                "${workspaceFolder}/navy-apps/libs/libminiSDL/include/*",
+                "${workspaceFolder}/abstract-machine/am/src"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
