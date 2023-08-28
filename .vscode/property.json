@@ -4,7 +4,7 @@
 		"PL": "template"
 	},
 	"arch": {
-		"prjPath": "",
+		"prjPath": "./npc",
 		"hardware": {
 			"src": "./npc/vsrc",
 			"sim": "./npc/csrc",
