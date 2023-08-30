@@ -48,16 +48,11 @@ static int cmd_c(char* args) {
   return 0;
 }
 
-static int cmd_si(char* args) {
+static int cmd_x(char* args) {
   /* extract the first argument */
-  char* arg = strtok(NULL, " ");
-
-  if (arg == NULL) {
-    /* no argument given */
-    cpu_exec(1);
-  } else {
-    cpu_exec(atol(args));
-  }
+  char* arg1 = strtok(NULL, " ");
+  char* arg2 = strtok(NULL, " ");
+  printf("%s %s\n", arg1, arg2);
   return 0;
 }
 
@@ -87,6 +82,19 @@ static int cmd_info(char* args) {
   return 0;
 }
 
+static int cmd_si(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    /* no argument given */
+    cpu_exec(1);
+  } else {
+    cpu_exec(atol(args));
+  }
+  return 0;
+}
+
 static int cmd_help(char* args);
 
 static struct {
@@ -98,7 +106,8 @@ static struct {
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "Single step N times", cmd_si},
-    {"info", "Print register or watchpoint info", cmd_info}};
+    {"info", "Print register or watchpoint info", cmd_info},
+    {"x", "Examine memory", cmd_x}};
 
 #define NR_CMD ARRLEN(cmd_table)
 
