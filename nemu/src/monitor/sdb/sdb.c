@@ -17,6 +17,7 @@
 
 #include <cpu/cpu.h>
 #include <isa.h>
+#include <memory/paddr.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 
@@ -48,15 +49,27 @@ static int cmd_c(char* args) {
   return 0;
 }
 
-static int cmd_si(char* args) {
-  /* extract the first argument */
-  char* arg = strtok(NULL, " ");
-
-  if (arg == NULL) {
-    /* no argument given */
-    cpu_exec(1);
-  } else {
-    cpu_exec(atol(args));
+static int cmd_x(char* args) {
+  char* arg1 = strtok(NULL, " ");
+  if (arg1 == NULL) {
+    printf("miss argument\n");
+    return 0;
+  };
+  char* arg2 = strtok(NULL, " ");
+  if (arg2 == NULL) {
+    printf("miss argument\n");
+    return 0;
+  };
+  int32_t n = atoi(arg1);
+  uint32_t addr;
+  if (sscanf(arg2, "%x", &addr) <= 0) {
+    printf("wrong argument\n");
+    return 0;
+  }
+  for (int i = 0; i < n; i++) {
+    printf("%x: %2x\t%2x\t%2x\t%2x\n", addr, paddr_read(addr + i * 16, 1),
+           paddr_read(addr + 4 + i * 16, 1), paddr_read(addr + 8 + i * 16, 1),
+           paddr_read(addr + 12 + i * 16, 1));
   }
   return 0;
 }
@@ -87,6 +100,19 @@ static int cmd_info(char* args) {
   return 0;
 }
 
+static int cmd_si(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    /* no argument given */
+    cpu_exec(1);
+  } else {
+    cpu_exec(atol(args));
+  }
+  return 0;
+}
+
 static int cmd_help(char* args);
 
 static struct {
@@ -98,7 +124,8 @@ static struct {
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
     {"si", "Single step N times", cmd_si},
-    {"info", "Print register or watchpoint info", cmd_info}};
+    {"info", "Print register or watchpoint info", cmd_info},
+    {"x", "Examine memory", cmd_x}};
 
 #define NR_CMD ARRLEN(cmd_table)
 
