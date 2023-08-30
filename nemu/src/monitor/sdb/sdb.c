@@ -17,6 +17,7 @@
 
 #include <cpu/cpu.h>
 #include <isa.h>
+#include <memory/paddr.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 
@@ -65,7 +66,11 @@ static int cmd_x(char* args) {
     printf("wrong argument\n");
     return 0;
   }
-  printf("%d %u\n", n, addr);
+  for (int i = 0; i < n; i++) {
+    printf("%x: %2x\t%2x\t%2x\t%2x\n", addr, paddr_read(addr + i * 16, 1),
+           paddr_read(addr + 4 + i * 16, 1), paddr_read(addr + 8 + i * 16, 1),
+           paddr_read(addr + 12 + i * 16, 1));
+  }
   return 0;
 }
 
