@@ -70,14 +70,19 @@ static int cmd_info(char* args) {
   /* extract the first argument */
   char* arg = strtok(NULL, " ");
 
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+
   if (strcmp(arg, "r") == 0) {
     //register info
     isa_reg_display();
   } else if (strcmp(arg, "w") == 0) {
     //watchpoint info
-    printf("watchpoint info");
+    printf("watchpoint info\n");
   } else {
-    printf("wrong argument");
+    printf("wrong argument\n");
   }
   return 0;
 }
