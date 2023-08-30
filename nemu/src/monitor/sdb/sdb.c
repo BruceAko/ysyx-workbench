@@ -61,7 +61,7 @@ static int cmd_x(char* args) {
     printf("miss argument\n");
     return 0;
   }
-  printf("%u %x\n", n, addr);
+  printf("%u %u\n", n, addr);
   return 0;
 }
 
