@@ -49,19 +49,23 @@ static int cmd_c(char* args) {
 }
 
 static int cmd_x(char* args) {
-  for (int i = 0; i < 2; i++) {
-    if (strtok(NULL, " ") == NULL) {
-      printf("miss argument\n");
-      return 0;
-    };
-  }
-  uint32_t n;
-  int32_t addr;
-  if (sscanf(args, "%u%x", &n, &addr) <= 0) {
+  char* arg1 = strtok(NULL, " ");
+  if (arg1 == NULL) {
     printf("miss argument\n");
     return 0;
+  };
+  char* arg2 = strtok(NULL, " ");
+  if (arg2 == NULL) {
+    printf("miss argument\n");
+    return 0;
+  };
+  int32_t n = atoi(arg1);
+  uint32_t addr;
+  if (sscanf(arg2, "%x", &addr) <= 0) {
+    printf("wrong argument\n");
+    return 0;
   }
-  printf("%u %u\n", n, addr);
+  printf("%d %u\n", n, addr);
   return 0;
 }
 
