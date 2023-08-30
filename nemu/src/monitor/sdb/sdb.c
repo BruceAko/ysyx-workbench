@@ -56,7 +56,7 @@ static int cmd_si(char* args) {
     /* no argument given */
     cpu_exec(1);
   } else {
-    cpu_exec(atoi(args));
+    cpu_exec(atol(args));
   }
   return 0;
 }
@@ -64,6 +64,22 @@ static int cmd_si(char* args) {
 static int cmd_q(char* args) {
   nemu_state.state = NEMU_QUIT;
   return -1;
+}
+
+static int cmd_info(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (strcmp(arg, "r") == 0) {
+    //register info
+    isa_reg_display();
+  } else if (strcmp(arg, "w") == 0) {
+    //watchpoint info
+    printf("watchpoint info");
+  } else {
+    printf("wrong argument");
+  }
+  return 0;
 }
 
 static int cmd_help(char* args);
@@ -76,7 +92,8 @@ static struct {
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
-    {"si", "Single step N times", cmd_si}};
+    {"si", "Single step N times", cmd_si},
+    {"info", "Print register or watchpoint info", cmd_info}};
 
 #define NR_CMD ARRLEN(cmd_table)
 
