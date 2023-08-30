@@ -50,9 +50,13 @@ static int cmd_c(char* args) {
 
 static int cmd_x(char* args) {
   /* extract the first argument */
-  char* arg1 = strtok(NULL, " ");
-  char* arg2 = strtok(NULL, " ");
-  printf("%s %s\n", arg1, arg2);
+  uint32_t n;
+  uint32_t addr;
+  if (sscanf(args, "%u%x", &n, &addr) <= 0) {
+    printf("miss argument");
+    return 0;
+  }
+  printf("%u %x", n, addr);
   return 0;
 }
 
