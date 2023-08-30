@@ -53,10 +53,10 @@ static int cmd_x(char* args) {
   uint32_t n;
   uint32_t addr;
   if (sscanf(args, "%u%x", &n, &addr) <= 0) {
-    printf("miss argument");
+    printf("miss argument\n");
     return 0;
   }
-  printf("%u %x", n, addr);
+  printf("%u %x\n", n, addr);
   return 0;
 }
 
