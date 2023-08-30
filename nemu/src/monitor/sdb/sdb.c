@@ -49,7 +49,15 @@ static int cmd_c(char* args) {
 }
 
 static int cmd_si(char* args) {
-  cpu_exec(1);
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    /* no argument given */
+    cpu_exec(1);
+  } else {
+    cpu_exec(atoi(args));
+  }
   return 0;
 }
 
