@@ -67,7 +67,7 @@ static int cmd_x(char* args) {
     return 0;
   }
   for (int i = 0; i < n; i++) {
-    printf("%x: %2x\t%2x\t%2x\t%2x\n", addr, paddr_read(addr + i * 4, 1),
+    printf("%x: %02x\t%02x\t%02x\t%02x\n", addr, paddr_read(addr + i * 4, 1),
            paddr_read(addr + 1 + i * 4, 1), paddr_read(addr + 2 + i * 4, 1),
            paddr_read(addr + 3 + i * 4, 1));
   }
