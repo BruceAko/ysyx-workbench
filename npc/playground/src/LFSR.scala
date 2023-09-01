@@ -10,8 +10,8 @@ class LSFR extends Module {
 
   val cnt            = RegInit(0.U(8.W))
   val start_reg      = RegInit(0.U(1.W))
-  val start_postedge = UInt(1.W)
-  val xor_bit        = UInt(1.W)
+  val start_postedge = Wire(UInt(1.W))
+  val xor_bit        = Wire(UInt(1.W))
 
   start_postedge := io.start & ~start_reg
   xor_bit        := cnt(4) ^ cnt(3) ^ cnt(2) ^ cnt(0)
