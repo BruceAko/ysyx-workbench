@@ -8,6 +8,7 @@
 !*.v
 !*.cpp
 !*.cc
+!*.nxdc
 !.gitignore
 !.scalafmt.conf
 !build.sc

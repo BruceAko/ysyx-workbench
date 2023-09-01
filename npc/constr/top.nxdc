@@ -1,0 +1,9 @@
+top=LSFR
+
+a (SW7, SW6, SW5, SW4)
+b (SW3, SW2, SW1, SW0)
+func (SW10, SW9, SW8)
+res (LD3, LD2, LD1, LD0)
+carry LD4
+zero LD5
+overflow LD6
