@@ -16,12 +16,11 @@ class LSFR extends Module {
   start_postedge := io.start & ~start_reg
   xor_bit        := cnt(4) ^ cnt(3) ^ cnt(2) ^ cnt(0)
   io.out         := cnt
-  start_reg      := io.start
 
   when(start_postedge === 1.U) {
     cnt := io.seed
   }.elsewhen(start_reg === 1.U) {
     cnt := Cat(xor_bit, cnt(7, 1))
   }
-
+  start_reg := io.start
 }
