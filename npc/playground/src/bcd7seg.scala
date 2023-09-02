@@ -59,5 +59,7 @@ class bcd7seg extends Module {
         io.h := "b0111000".U
       }
     }
-  }.otherwise(io.h := 0.U)
+  }.otherwise {
+    io.h := "b0000000".U
+  }
 }
