@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "make source and git commit",
+			"label": "gdb-vscode",
 			"command": "make gdb-vscode",
 			"args": [],
 			"options": {
