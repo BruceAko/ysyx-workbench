@@ -20,7 +20,8 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "make source and git commit"
         }
     ]
 }
