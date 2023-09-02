@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "nemu dbg",
+            "name": "nemu",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/nemu/build/riscv32-nemu-interpreter",
