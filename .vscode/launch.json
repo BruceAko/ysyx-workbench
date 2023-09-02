@@ -6,9 +6,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/nemu/build/riscv32-nemu-interpreter",
-            "args": [],
-            "stopAtEntry": true,
-            "cwd": "${workspaceFolder}",
+            "args": [
+                "--log=${workspaceFolder}/nemu/build/nemu-log.txt"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/nemu",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
