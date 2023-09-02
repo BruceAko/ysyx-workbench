@@ -9,7 +9,7 @@ class LSFR extends Module {
   })
 
   val cnt       = RegInit(0.U(8.W))
-  val start_reg = RegInit(false.B(Bool()))
+  val start_reg = RegInit(0.U(1.W))
   val xor_bit   = Wire(UInt(1.W))
 
   io.out := cnt
