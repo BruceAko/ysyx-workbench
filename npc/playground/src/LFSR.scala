@@ -27,12 +27,12 @@ class LSFR extends Module {
   start_reg := io.start
 
   val seg1 = Module(new bcd7seg())
-  seg1.io.en := io.start
-  seg1.io.b  := io.out(7, 4)
-  seg1.io.h  := io.seg1_out
+  seg1.io.en  := io.start
+  seg1.io.b   := io.out(7, 4)
+  io.seg1_out := seg1.io.h
 
   val seg2 = Module(new bcd7seg())
-  seg2.io.en := io.start
-  seg2.io.b  := io.out(3, 0)
-  seg2.io.h  := io.seg2_out
+  seg2.io.en  := io.start
+  seg2.io.b   := io.out(3, 0)
+  io.seg2_out := seg2.io.h
 }
