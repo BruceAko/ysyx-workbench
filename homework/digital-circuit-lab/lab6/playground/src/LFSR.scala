@@ -3,9 +3,11 @@ import chisel3.util.Cat
 
 class LSFR extends Module {
   val io = IO(new Bundle {
-    val start = Input(UInt(1.W))
-    val seed  = Input(UInt(8.W))
-    val out   = Output(UInt(8.W))
+    val start    = Input(UInt(1.W))
+    val seed     = Input(UInt(8.W))
+    val out      = Output(UInt(8.W))
+    val seg1_out = Output(UInt(7.W))
+    val seg2_out = Output(UInt(7.W))
   })
 
   val cnt            = RegInit(0.U(8.W))
@@ -23,4 +25,14 @@ class LSFR extends Module {
     cnt := Cat(xor_bit, cnt(7, 1))
   }
   start_reg := io.start
+
+  val seg1 = Module(new bcd7seg())
+  seg1.io.en  := io.start
+  seg1.io.b   := io.out(7, 4)
+  io.seg1_out := seg1.io.h
+
+  val seg2 = Module(new bcd7seg())
+  seg2.io.en  := io.start
+  seg2.io.b   := io.out(3, 0)
+  io.seg2_out := seg2.io.h
 }
