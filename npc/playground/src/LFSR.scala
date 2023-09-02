@@ -9,8 +9,7 @@ class LSFR extends Module {
   })
 
   val cnt       = RegInit(0.U(8.W))
-  val start_reg = RegInit(0.U(1.W))
-  val xor_bit   = Wire(UInt(1.W))
+  val start_reg = RegInit(Bool(), false.B)
 
   io.out := cnt
 
@@ -18,7 +17,7 @@ class LSFR extends Module {
 
   when(io.start & ~start_reg === true.B) {
     cnt := io.seed
-  }.elsewhen(start_reg === 1.U) {
+  }.elsewhen(start_reg === true.B) {
     cnt := Cat(cnt(4) ^ cnt(3) ^ cnt(2) ^ cnt(0), cnt(7, 1))
   }
 }
