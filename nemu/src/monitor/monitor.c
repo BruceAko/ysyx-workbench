@@ -157,7 +157,7 @@ void init_monitor(int argc, char* argv[]) {
   /* Display welcome message. */
   welcome();
   bool b;
-  expr("396 -212", &b);
+  expr("396 *212", &b);
 }
 #else  // CONFIG_TARGET_AM
 static long load_img() {
