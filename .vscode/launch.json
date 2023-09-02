@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/nemu/build/riscv32-nemu-interpreter",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
