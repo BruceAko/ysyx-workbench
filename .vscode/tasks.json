@@ -4,7 +4,7 @@
 		{
 			"type": "shell",
 			"label": "make source and git commit",
-			"command": "make gdb",
+			"command": "make gdb-vscode",
 			"args": [],
 			"options": {
 				"cwd": "${workspaceFolder}/nemu"
