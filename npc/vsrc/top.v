@@ -36,48 +36,86 @@
   `endif // RANDOMIZE
 `endif // not def INIT_RANDOM_PROLOG_
 
-module LSFR(	// <stdin>:3:10
-  input        clock,	// <stdin>:4:11
-               reset,	// <stdin>:5:11
-               io_start,	// playground/src/LFSR.scala:5:14
-  input  [7:0] io_seed,	// playground/src/LFSR.scala:5:14
-  output [7:0] io_out	// playground/src/LFSR.scala:5:14
+module bcd7seg(	// <stdin>:3:10, :78:10
+  input        io_en,	// playground/src/bcd7seg.scala:6:14
+  input  [3:0] io_b,	// playground/src/bcd7seg.scala:6:14
+  output [6:0] io_h	// playground/src/bcd7seg.scala:6:14
 );
 
-  reg [7:0] cnt;	// playground/src/LFSR.scala:11:31
-  reg       start_reg;	// playground/src/LFSR.scala:12:31
-  always @(posedge clock) begin	// <stdin>:4:11
-    if (reset) begin	// <stdin>:4:11
-      cnt <= 8'h0;	// playground/src/LFSR.scala:11:31
-      start_reg <= 1'h0;	// playground/src/LFSR.scala:12:31
+  wire [15:0][6:0] _GEN =
+    '{7'h38,
+      7'h30,
+      7'h42,
+      7'h31,
+      7'h60,
+      7'h8,
+      7'h4,
+      7'h0,
+      7'hF,
+      7'h20,
+      7'h24,
+      7'h4C,
+      7'h6,
+      7'h12,
+      7'h4F,
+      7'h1};	// playground/src/bcd7seg.scala:11:8, :13:18, :15:14, :18:14, :21:14, :24:14, :27:14, :30:14, :33:14, :36:14, :39:14, :42:14, :45:14, :48:14, :51:14, :54:14, :57:14, :60:14
+  assign io_h = io_en ? _GEN[io_b] : 7'h0;	// <stdin>:3:10, :78:10, playground/src/bcd7seg.scala:11:8, :12:23, :13:18, :15:14, :18:14, :21:14, :24:14, :27:14, :30:14, :33:14, :36:14, :39:14, :42:14, :45:14, :48:14, :51:14, :54:14, :57:14, :60:14, :64:10
+endmodule
+
+module LSFR(	// <stdin>:153:10
+  input        clock,	// <stdin>:154:11
+               reset,	// <stdin>:155:11
+               io_start,	// playground/src/LFSR.scala:5:14
+  input  [7:0] io_seed,	// playground/src/LFSR.scala:5:14
+  output [7:0] io_out,	// playground/src/LFSR.scala:5:14
+  output [6:0] io_seg1_out,	// playground/src/LFSR.scala:5:14
+               io_seg2_out	// playground/src/LFSR.scala:5:14
+);
+
+  reg [7:0] cnt;	// playground/src/LFSR.scala:13:31
+  reg       start_reg;	// playground/src/LFSR.scala:14:31
+  always @(posedge clock) begin	// <stdin>:154:11
+    if (reset) begin	// <stdin>:154:11
+      cnt <= 8'h0;	// playground/src/LFSR.scala:13:31
+      start_reg <= 1'h0;	// playground/src/LFSR.scala:14:31
     end
-    else begin	// <stdin>:4:11
-      if (io_start & ~start_reg)	// playground/src/LFSR.scala:12:31, :16:{30,32}
-        cnt <= io_seed;	// playground/src/LFSR.scala:11:31
-      else if (start_reg)	// playground/src/LFSR.scala:12:31
-        cnt <= {cnt[4] ^ cnt[3] ^ cnt[2] ^ cnt[0], cnt[7:1]};	// playground/src/LFSR.scala:11:31, :17:{24,33,42,46,51}, :23:{15,28}
-      start_reg <= io_start;	// playground/src/LFSR.scala:12:31
+    else begin	// <stdin>:154:11
+      if (io_start & ~start_reg)	// playground/src/LFSR.scala:14:31, :18:{30,32}
+        cnt <= io_seed;	// playground/src/LFSR.scala:13:31
+      else if (start_reg)	// playground/src/LFSR.scala:14:31
+        cnt <= {cnt[4] ^ cnt[3] ^ cnt[2] ^ cnt[0], cnt[7:1]};	// playground/src/LFSR.scala:13:31, :19:{24,33,42,46,51}, :25:{15,28}
+      start_reg <= io_start;	// playground/src/LFSR.scala:14:31
     end
   end // always @(posedge)
-  `ifndef SYNTHESIS	// <stdin>:3:10
-    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:3:10
-      `FIRRTL_BEFORE_INITIAL	// <stdin>:3:10
+  `ifndef SYNTHESIS	// <stdin>:153:10
+    `ifdef FIRRTL_BEFORE_INITIAL	// <stdin>:153:10
+      `FIRRTL_BEFORE_INITIAL	// <stdin>:153:10
     `endif // FIRRTL_BEFORE_INITIAL
-    initial begin	// <stdin>:3:10
-      automatic logic [31:0] _RANDOM_0;	// <stdin>:3:10
-      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:3:10
-        `INIT_RANDOM_PROLOG_	// <stdin>:3:10
+    initial begin	// <stdin>:153:10
+      automatic logic [31:0] _RANDOM_0;	// <stdin>:153:10
+      `ifdef INIT_RANDOM_PROLOG_	// <stdin>:153:10
+        `INIT_RANDOM_PROLOG_	// <stdin>:153:10
       `endif // INIT_RANDOM_PROLOG_
-      `ifdef RANDOMIZE_REG_INIT	// <stdin>:3:10
-        _RANDOM_0 = `RANDOM;	// <stdin>:3:10
-        cnt = _RANDOM_0[7:0];	// playground/src/LFSR.scala:11:31
-        start_reg = _RANDOM_0[8];	// playground/src/LFSR.scala:11:31, :12:31
+      `ifdef RANDOMIZE_REG_INIT	// <stdin>:153:10
+        _RANDOM_0 = `RANDOM;	// <stdin>:153:10
+        cnt = _RANDOM_0[7:0];	// playground/src/LFSR.scala:13:31
+        start_reg = _RANDOM_0[8];	// playground/src/LFSR.scala:13:31, :14:31
       `endif // RANDOMIZE_REG_INIT
     end // initial
-    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:3:10
-      `FIRRTL_AFTER_INITIAL	// <stdin>:3:10
+    `ifdef FIRRTL_AFTER_INITIAL	// <stdin>:153:10
+      `FIRRTL_AFTER_INITIAL	// <stdin>:153:10
     `endif // FIRRTL_AFTER_INITIAL
   `endif // not def SYNTHESIS
-  assign io_out = cnt;	// <stdin>:3:10, playground/src/LFSR.scala:11:31
+  bcd7seg seg1 (	// playground/src/LFSR.scala:29:20
+    .io_en (io_start),
+    .io_b  (cnt[7:4]),	// playground/src/LFSR.scala:13:31, :31:24
+    .io_h  (io_seg1_out)
+  );
+  bcd7seg seg2 (	// playground/src/LFSR.scala:34:20
+    .io_en (io_start),
+    .io_b  (cnt[3:0]),	// playground/src/LFSR.scala:13:31, :36:24
+    .io_h  (io_seg2_out)
+  );
+  assign io_out = cnt;	// <stdin>:153:10, playground/src/LFSR.scala:13:31
 endmodule
 
