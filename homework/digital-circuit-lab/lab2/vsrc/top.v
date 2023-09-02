@@ -53,7 +53,7 @@ module bcd7seg(
                 4'd8:
                     h = 7'b0000000;
                 4'd9:
-                    h = 7'b0000001;
+                    h = 7'b0000100;
                 default:
                     h = 7'b0000000;
             endcase
