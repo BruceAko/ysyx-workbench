@@ -108,8 +108,7 @@ static int cmd_si(char* args) {
     /* no argument given */
     cpu_exec(1);
   } else {
-    long param = atol(args);
-    cpu_exec(param);
+    cpu_exec(atol(args));
   }
   return 0;
 }
