@@ -8,11 +8,10 @@ class LSFR extends Module {
     val out   = Output(UInt(8.W))
   })
 
-  val cnt       = RegInit(0.U(8.W))
+  val cnt       = RegInit(UInt(8.W), 0.U)
   val start_reg = RegInit(Bool(), false.B)
 
-  io.out := cnt
-
+  io.out    := cnt
   start_reg := io.start
 
   when(io.start & ~start_reg === true.B) {
