@@ -8,7 +8,6 @@ class bcd7seg extends Module {
     val b  = Input(UInt(4.W))
     val h  = Output(UInt(7.W))
   })
-  io.h := "b0000001".U
   when(io.en === 1.U) {
     switch(io.b) {
       is(0.U) {
