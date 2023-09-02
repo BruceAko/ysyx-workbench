@@ -98,7 +98,9 @@ static bool make_token(char* e) {
 
         switch (rules[i].token_type) {
           default:
-            //TODO();
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].str[0] = 'h';
+            tokens[nr_token].str[1] = '\0';
         }
 
         break;
@@ -122,6 +124,9 @@ word_t expr(char* e, bool* success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   //TODO();
+  for (int i = 0; i < ARRLEN(tokens); i++) {
+    printf("type:%d str:%s\n", tokens[i].type, tokens[i].str);
+  }
 
   return 0;
 }
