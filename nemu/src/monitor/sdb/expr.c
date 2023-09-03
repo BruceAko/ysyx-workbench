@@ -173,7 +173,7 @@ int find_main_op(int p, int q) {
     }
   }
   assert(position >= p && position <= q);
-  return position;
+  return tokens[position].type;
 }
 
 word_t eval(int p, int q) {
