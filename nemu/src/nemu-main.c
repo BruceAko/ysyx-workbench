@@ -47,8 +47,9 @@ int main(int argc, char* argv[]) {
   //   }
   // }
   bool success;
-  word_t res2 = expr("5*25+17*28", &success);
+  word_t res2 = expr("5*25+17*28\n", &success);
   printf("%u ", res2);
+
   /* Start engine. */
   engine_start();
 
