@@ -187,7 +187,7 @@ word_t eval(int p, int q) {
       case TK_DECNUM:
         return atoi(tokens[p].str);
       case TK_HEXNUM:
-        return atoi(tokens[p].str);
+        return strtoul(tokens[p].str, NULL, 16);
       case TK_REG:
         bool success;
         word_t val = isa_reg_str2val(tokens[p].str, &success);
