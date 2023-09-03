@@ -30,7 +30,6 @@ int main(int argc, char* argv[]) {
   init_monitor(argc, argv);
 #endif
 
-  /*
   FILE* fp = fopen("./tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   word_t res;
@@ -38,6 +37,7 @@ int main(int argc, char* argv[]) {
   while (fscanf(fp, "%d %s\n", &res, buf) != EOF) {
     //fgets(buf, 65536, fp);
     bool success;
+    printf("%s\n", buf);
     word_t res2 = expr(buf, &success);
     printf("%u ", res2);
     if (res2 == res && success == true) {
@@ -46,10 +46,6 @@ int main(int argc, char* argv[]) {
       panic("fail\n");
     }
   }
-  */
-  bool success;
-  word_t res2 = expr("5*25+17*28", &success);
-  printf("%u\n", res2);
 
   /* Start engine. */
   engine_start();
