@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     bool success;
     printf("%s\n", buf);
     word_t res2 = expr(buf, &success);
-    printf("%u ", res2);
+    printf("%d ", res2);
     if (res2 == res && success == true) {
       printf("success\n");
     } else {
