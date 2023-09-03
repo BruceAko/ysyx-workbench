@@ -100,7 +100,9 @@ int main(int argc, char* argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
+    // 添加“-Wall -Werror”的目的是让除零从warning变成error
     int ret = system("gcc /tmp/.code.c -o /tmp/.expr -Wall -Werror");
+    // 返回值不为0说明gcc执行失败，发生了除零异常，这样就能避免生成除零表达式
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
