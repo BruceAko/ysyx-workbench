@@ -15,7 +15,7 @@
 
 #include <common.h>
 
-#include "./monitor/sdb/sdb.h"
+#include "monitor/sdb/sdb.h"
 
 void init_monitor(int, char*[]);
 void am_init_monitor();
@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
   init_monitor(argc, argv);
 #endif
 
-  FILE* fp = fopen("./tools/gen-expr/build/input", "r");
+  FILE* fp = fopen("tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   word_t res;
   char buf[65536];
