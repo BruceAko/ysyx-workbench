@@ -157,7 +157,7 @@ void init_monitor(int argc, char* argv[]) {
   /* Display welcome message. */
   welcome();
   bool b;
-  expr("(396+414) /(212 -3)", &b);
+  printf("%d\n", expr("(396+414) /(212 -3)", &b));
 }
 #else  // CONFIG_TARGET_AM
 static long load_img() {

@@ -111,8 +111,8 @@ static bool make_token(char* e) {
           default:
             tokens[nr_token].type = rules[i].token_type;
             nr_token++;
+            break;
         }
-
         break;
       }
     }
@@ -126,15 +126,91 @@ static bool make_token(char* e) {
   return true;
 }
 
+bool check_parentheses(int p, int q, bool* legal) {
+  bool result = true;
+  int s = 0;
+  for (int i = p; i <= q; i++) {
+    if (tokens[i].type == '(') s++;
+    if (tokens[i].type == ')') s--;
+    if (s == 0 && i != q) result = false;
+  }
+  if (s != 0) {
+    *legal = false;
+    return true;
+  }
+  *legal = true;
+  return result;
+}
+
+int find_main_op(int p, int q) {
+  int position = -1;
+  int left_parentheses = 0;
+  for (int i = p; i <= q; i++) {
+    switch (tokens[i].type) {
+      case '(':
+        left_parentheses++;
+        break;
+      case ')':
+        left_parentheses--;
+        break;
+      case '*':
+      case '/':
+        if (left_parentheses > 0) continue;
+        if (position != -1) {
+          int type = tokens[position].type;
+          if (type == '*' || type == '/') position = i;
+        } else {
+          position = i;
+        }
+        break;
+      case '+':
+      case '-':
+        if (left_parentheses > 0) continue;
+        position = i;
+        break;
+      default:
+        continue;
+    }
+  }
+  assert(position >= p && position <= q);
+  return position;
+}
+
+word_t eval(int p, int q) {
+  bool legal;
+  if (p > q) {
+    panic("Bad expression");
+  } else if (p == q) {
+    return atoi(tokens[p].str);
+  } else if (check_parentheses(p, q, &legal) == true) {
+    if (legal == false) {
+      panic("Unmatched parentheses");
+    }
+    return eval(p + 1, q - 1);
+  } else {
+    int op = find_main_op(p, q);
+    int val1 = eval(p, op - 1);
+    int val2 = eval(op + 1, q);
+    switch (op) {
+      case '+':
+        return val1 + val2;
+      case '-':
+        return val1 - val2;
+      case '*':
+        return val1 * val2;
+      case '/':
+        return val1 / val2;
+      default:
+        panic("Wrong operator");
+    }
+  }
+}
+
 word_t expr(char* e, bool* success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
-
-  /* TODO: Insert codes to evaluate the expression. */
-  for (int i = 0; i < ARRLEN(tokens); i++) {
-    printf("%d %s\n", tokens[i].type, tokens[i].str);
-  }
-  return 0;
+  *success = true;
+  return eval(0, nr_token - 1);
 }
