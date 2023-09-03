@@ -15,18 +15,34 @@
 
 #include <common.h>
 
-void init_monitor(int, char *[]);
+// #include "monitor/sdb/sdb.h"
+
+void init_monitor(int, char*[]);
 void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
-int main(int argc, char *argv[]) {
-  /* Initialize the monitor. */
+int main(int argc, char* argv[]) {
+/* Initialize the monitor. */
 #ifdef CONFIG_TARGET_AM
   am_init_monitor();
 #else
   init_monitor(argc, argv);
 #endif
+
+  /*
+  FILE* fp = fopen("tools/gen-expr/build/input", "r");
+  assert(fp != NULL);
+  word_t ture_res;
+  char buf[65536];
+  while (fscanf(fp, "%d %s\n", &ture_res, buf) != EOF) {
+    bool success;
+    word_t expr_res = expr(buf, &success);
+    if (expr_res != ture_res || success != true) {
+      panic("fail\n");
+    }
+  }
+  */
 
   /* Start engine. */
   engine_start();
