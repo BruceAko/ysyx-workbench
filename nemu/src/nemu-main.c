@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
   init_monitor(argc, argv);
 #endif
 
+  /*
   FILE* fp = fopen("./tools/gen-expr/build/input", "r");
   assert(fp != NULL);
   word_t res;
@@ -45,6 +46,10 @@ int main(int argc, char* argv[]) {
       panic("fail\n");
     }
   }
+  */
+  bool success;
+  word_t res2 = expr("5*25+17*28", &success);
+  printf("%u\n", res2);
 
   /* Start engine. */
   engine_start();
