@@ -16,8 +16,6 @@
 #include <isa.h>
 #include <memory/paddr.h>
 
-#include "./sdb/sdb.h"
-
 void init_rand();
 void init_log(const char* log_file);
 void init_mem();
@@ -156,8 +154,6 @@ void init_monitor(int argc, char* argv[]) {
 
   /* Display welcome message. */
   welcome();
-  bool b;
-  printf("%d\n", expr("(396+414) /(212 -3)", &b));
 }
 #else  // CONFIG_TARGET_AM
 static long load_img() {

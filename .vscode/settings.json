@@ -112,7 +112,8 @@
         "fixedptc.h": "c",
         "fenv.h": "c",
         "sdl-file.h": "c",
-        "cpu.h": "c"
+        "cpu.h": "c",
+        "regex.h": "c"
     },
     "makefile.makefilePath": "nemu/Makefile",
     "makefile.makeDirectory": "nemu/",
