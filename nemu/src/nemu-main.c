@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
     //fgets(buf, 65536, fp);
     bool success;
     word_t res2 = expr(buf, &success);
+    printf("%u ", res2);
     if (res2 == res && success == true) {
       printf("success\n");
     } else {
