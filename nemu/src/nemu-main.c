@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
     if (res2 == res && success == true) {
       printf("success\n");
     } else {
-      printf("fail\n");
+      panic("fail\n");
     }
   }
 
