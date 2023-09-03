@@ -173,7 +173,7 @@ int find_main_op(int p, int q) {
     }
   }
   assert(position >= p && position <= q);
-  return tokens[position].type;
+  return position;
 }
 
 word_t eval(int p, int q) {
@@ -188,10 +188,10 @@ word_t eval(int p, int q) {
     }
     return eval(p + 1, q - 1);
   } else {
-    int op = find_main_op(p, q);
-    int val1 = eval(p, op - 1);
-    int val2 = eval(op + 1, q);
-    switch (op) {
+    int op_pos = find_main_op(p, q);
+    int val1 = eval(p, op_pos - 1);
+    int val2 = eval(op_pos + 1, q);
+    switch (tokens[op_pos].type) {
       case '+':
         return val1 + val2;
       case '-':
