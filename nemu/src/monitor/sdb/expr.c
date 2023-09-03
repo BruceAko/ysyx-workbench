@@ -32,13 +32,13 @@ static struct rule {
 } rules[] = {
     {" +", TK_NOTYPE},   // spaces
     {"\\+", '+'},        // plus
-    {"-", '-'},          //
-    {"\\*", '*'},        //
-    {"/", '/'},          //
+    {"-", '-'},          // subtract
+    {"\\*", '*'},        // multiply
+    {"/", '/'},          // divide
     {"==", TK_EQ},       // equal
     {"[0-9]+", TK_NUM},  // num
-    {"\\(", '('},        //
-    {"\\)", ')'},        //
+    {"\\(", '('},        // open parenthesis
+    {"\\)", ')'},        // close parenthesis
 };
 
 #define NR_REGEX ARRLEN(rules)
