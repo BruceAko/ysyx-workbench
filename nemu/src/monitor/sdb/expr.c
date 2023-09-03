@@ -23,22 +23,31 @@
 enum {
   TK_NOTYPE = 256,
   TK_EQ,
-  TK_NUM,
+  TK_UNEQ,
+  TK_AND,
+  TK_DECNUM,
+  TK_HEXNUM,
+  TK_REG,
+  DEREF,
 };
 
 static struct rule {
   const char* regex;
   int token_type;
 } rules[] = {
-    {" +", TK_NOTYPE},   // spaces
-    {"\\+", '+'},        // plus
-    {"-", '-'},          // subtract
-    {"\\*", '*'},        // multiply
-    {"/", '/'},          // divide
-    {"==", TK_EQ},       // equal
-    {"[0-9]+", TK_NUM},  // num
-    {"\\(", '('},        // open parenthesis
-    {"\\)", ')'},        // close parenthesis
+    {" +", TK_NOTYPE},        // spaces
+    {"\\+", '+'},             // plus
+    {"-", '-'},               // subtract
+    {"\\*", '*'},             // multiply
+    {"/", '/'},               // divide
+    {"==", TK_EQ},            // equal
+    {"!=", TK_UNEQ},          // unequal
+    {"&&", TK_AND},           // and
+    {"[0-9]+", TK_DECNUM},    // decimal number
+    {"0x[0-9]+", TK_HEXNUM},  // hexadecimal number
+    {"$[a-z0-9]+", TK_REG},   // register name
+    {"\\(", '('},             // open parenthesis
+    {"\\)", ')'},             // close parenthesis
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -93,7 +102,9 @@ static bool make_token(char* e) {
         switch (rules[i].token_type) {
           case TK_NOTYPE:
             break;
-          case TK_NUM:
+          case TK_DECNUM:
+          case TK_HEXNUM:
+          case TK_REG:
             assert(substr_len < 32);
             strncpy(tokens[nr_token].str, substr_start, substr_len);
             tokens[nr_token].str[substr_len] = '\0';
@@ -103,6 +114,7 @@ static bool make_token(char* e) {
             nr_token++;
             break;
         }
+
         break;
       }
     }
@@ -171,7 +183,19 @@ word_t eval(int p, int q) {
   if (p > q) {
     panic("Bad expression");
   } else if (p == q) {
-    return atoi(tokens[p].str);
+    switch (tokens[p].type) {
+      case TK_DECNUM:
+        return atoi(tokens[p].str);
+      case TK_HEXNUM:
+        return atoi(tokens[p].str);
+      case TK_REG:
+        bool success;
+        word_t val = isa_reg_str2val(tokens[p].str, &success);
+        return val;
+      default:
+        panic("Wrong type");
+    }
+
   } else if (check_parentheses(p, q, &legal) == true) {
     if (legal == false) {
       panic("Unmatched parentheses");
@@ -191,6 +215,15 @@ word_t eval(int p, int q) {
       case '/':
         if (val2 == 0) panic("Division by zero");
         return val1 / val2;
+      case TK_EQ:
+        return val1 == val2;
+        break;
+      case TK_UNEQ:
+        return val1 != val2;
+        break;
+      case TK_AND:
+        return val1 && val2;
+        break;
       default:
         panic("Wrong operator");
     }
