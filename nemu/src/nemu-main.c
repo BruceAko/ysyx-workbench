@@ -32,13 +32,12 @@ int main(int argc, char* argv[]) {
 
   FILE* fp = fopen("tools/gen-expr/build/input", "r");
   assert(fp != NULL);
-  word_t res;
+  word_t ture_res;
   char buf[65536];
-  while (fscanf(fp, "%d %s\n", &res, buf) != EOF) {
-    //fgets(buf, 65536, fp);
+  while (fscanf(fp, "%d %s\n", &ture_res, buf) != EOF) {
     bool success;
-    word_t res2 = expr(buf, &success);
-    if (res2 != res || success != true) {
+    word_t expr_res = expr(buf, &success);
+    if (expr_res != ture_res || success != true) {
       panic("fail\n");
     }
   }
