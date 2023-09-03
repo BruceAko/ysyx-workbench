@@ -189,6 +189,7 @@ word_t eval(int p, int q) {
       case '*':
         return val1 * val2;
       case '/':
+        if (val2 == 0) panic("Division by zero");
         return val1 / val2;
       default:
         panic("Wrong operator");
