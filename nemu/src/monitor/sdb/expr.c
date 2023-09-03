@@ -101,10 +101,18 @@ static bool make_token(char* e) {
          */
 
         switch (rules[i].token_type) {
+          case TK_NOTYPE:
+            break;
+          case TK_NUM:
+            assert(substr_len < 32);
+            strncpy(tokens[nr_token].str, substr_start, substr_len);
+            tokens[nr_token].str[substr_len + 1] = '\0';
+          // write through
           default:
             tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
         }
-        nr_token++;
+
         break;
       }
     }
@@ -125,7 +133,8 @@ word_t expr(char* e, bool* success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  //TODO();
-
+  for (int i = 0; i < ARRLEN(tokens); i++) {
+    printf("%d %s\n", tokens[i].type, tokens[i].str);
+  }
   return 0;
 }
