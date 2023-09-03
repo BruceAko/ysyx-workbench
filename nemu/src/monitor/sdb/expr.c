@@ -35,19 +35,19 @@ static struct rule {
   const char* regex;
   int token_type;
 } rules[] = {
-    {" +", TK_NOTYPE},         // spaces
-    {"\\+", '+'},              // plus
-    {"-", '-'},                // subtract
-    {"\\*", '*'},              // multiply
-    {"/", '/'},                // divide
-    {"==", TK_EQ},             // equal
-    {"!=", TK_UNEQ},           // unequal
-    {"&&", TK_AND},            // and
-    {"[0-9]+", TK_DECNUM},     // decimal number
-    {"0x[0-9]+", TK_HEXNUM},   // hexadecimal number
-    {"\\$[a-z0-9]+", TK_REG},  // register name
-    {"\\(", '('},              // open parenthesis
-    {"\\)", ')'},              // close parenthesis
+    {" +", TK_NOTYPE},                    // spaces
+    {"\\+", '+'},                         // plus
+    {"-", '-'},                           // subtract
+    {"\\*", '*'},                         // multiply
+    {"/", '/'},                           // divide
+    {"==", TK_EQ},                        // equal
+    {"!=", TK_UNEQ},                      // unequal
+    {"&&", TK_AND},                       // and
+    {"\\b[0-9]+\\b", TK_DECNUM},          // decimal number
+    {"\\b0x[0-9a-fA-F]+\\b", TK_HEXNUM},  // hexadecimal number
+    {"\\$[a-z0-9]+", TK_REG},             // register name
+    {"\\(", '('},                         // open parenthesis
+    {"\\)", ')'},                         // close parenthesis
 };
 
 #define NR_REGEX ARRLEN(rules)
