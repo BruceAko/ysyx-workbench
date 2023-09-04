@@ -226,7 +226,9 @@ word_t eval(int p, int q) {
     return eval(p + 1, q - 1);
   } else if (q - p == 1 && tokens[p].type == DEREF &&
              tokens[q].type == TK_HEXNUM) {
-    return (paddr_read(strtoul(tokens[q].str, NULL, 16), 4));
+    word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
+    printf("%x\n", mem);
+    return mem;
   } else {
     int op_pos = find_main_op(p, q);
     int val1 = eval(p, op_pos - 1);
