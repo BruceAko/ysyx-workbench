@@ -20,6 +20,8 @@
  */
 #include <regex.h>
 
+#include "memory/paddr.h"
+
 enum {
   TK_NOTYPE = 256,
   TK_EQ,
@@ -222,6 +224,9 @@ word_t eval(int p, int q) {
       panic("Unmatched parentheses");
     }
     return eval(p + 1, q - 1);
+  } else if (q - p == 1 && tokens[p].type == DEREF &&
+             tokens[q].type == TK_HEXNUM) {
+    return (paddr_read(strtoul(tokens[q].str, NULL, 16), 4));
   } else {
     int op_pos = find_main_op(p, q);
     int val1 = eval(p, op_pos - 1);
@@ -256,6 +261,16 @@ word_t expr(char* e, bool* success) {
     *success = false;
     return 0;
   }
+
+  // recognize DEREF
+  for (int i = 0; i < nr_token; i++) {
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
+                                             tokens[i - 1].type != TK_HEXNUM &&
+                                             tokens[i - 1].type != TK_REG))) {
+      tokens[i].type = DEREF;
+    }
+  }
+
   *success = true;
   return eval(0, nr_token - 1);
 }
