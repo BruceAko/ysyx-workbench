@@ -233,12 +233,12 @@ word_t eval(int p, int q) {
   } else if (q - p == 1 && tokens[p].type == NEG) {
     switch (tokens[q].type) {
       case TK_DECNUM:
-        return -atoi(tokens[p].str);
+        return -atoi(tokens[q].str);
       case TK_HEXNUM:
-        return -strtoul(tokens[p].str, NULL, 16);
+        return -strtoul(tokens[q].str, NULL, 16);
       case TK_REG:
         bool success;
-        word_t val = isa_reg_str2val(tokens[p].str, &success);
+        word_t val = isa_reg_str2val(tokens[q].str, &success);
         return -val;
       default:
         panic("Wrong type");
