@@ -20,6 +20,8 @@
  */
 #include <regex.h>
 
+#include "memory/paddr.h"
+
 enum {
   TK_NOTYPE = 256,
   TK_EQ,
@@ -29,6 +31,7 @@ enum {
   TK_HEXNUM,
   TK_REG,
   DEREF,
+  NEG,
 };
 
 static struct rule {
@@ -155,12 +158,33 @@ int find_main_op(int p, int q) {
       case ')':
         left_parentheses--;
         break;
+      case TK_AND:
+        if (left_parentheses > 0) continue;
+        if (position != -1) {
+          int type = tokens[position].type;
+          if (type == TK_AND) position = i;
+        } else {
+          position = i;
+        }
+        break;
+      case TK_EQ:
+      case TK_UNEQ:
+        if (left_parentheses > 0) continue;
+        if (position != -1) {
+          int type = tokens[position].type;
+          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ) position = i;
+        } else {
+          position = i;
+        }
+        break;
       case '*':
       case '/':
         if (left_parentheses > 0) continue;
         if (position != -1) {
           int type = tokens[position].type;
-          if (type == '*' || type == '/') position = i;
+          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ ||
+              type == '*' || type == '/')
+            position = i;
         } else {
           position = i;
         }
@@ -201,6 +225,24 @@ word_t eval(int p, int q) {
       panic("Unmatched parentheses");
     }
     return eval(p + 1, q - 1);
+  } else if (q - p == 1 && tokens[p].type == DEREF &&
+             tokens[q].type == TK_HEXNUM) {  // DEREF
+    word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
+    printf("%x\n", mem);
+    return mem;
+  } else if (q - p == 1 && tokens[p].type == NEG) {  //NEG
+    switch (tokens[q].type) {
+      case TK_DECNUM:
+        return -atoi(tokens[q].str);
+      case TK_HEXNUM:
+        return -strtoul(tokens[q].str, NULL, 16);
+      case TK_REG:
+        bool success;
+        word_t val = isa_reg_str2val(tokens[q].str, &success);
+        return -val;
+      default:
+        panic("Wrong type");
+    }
   } else {
     int op_pos = find_main_op(p, q);
     int val1 = eval(p, op_pos - 1);
@@ -235,6 +277,21 @@ word_t expr(char* e, bool* success) {
     *success = false;
     return 0;
   }
+
+  // recognize DEREF and NEG
+  for (int i = 0; i < nr_token; i++) {
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
+                                             tokens[i - 1].type != TK_HEXNUM &&
+                                             tokens[i - 1].type != TK_REG))) {
+      tokens[i].type = DEREF;
+    } else if (tokens[i].type == '-' &&
+               (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
+                           tokens[i - 1].type != TK_HEXNUM &&
+                           tokens[i - 1].type != TK_REG))) {
+      tokens[i].type = NEG;
+    }
+  }
+
   *success = true;
   return eval(0, nr_token - 1);
 }
