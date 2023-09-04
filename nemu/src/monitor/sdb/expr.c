@@ -155,12 +155,33 @@ int find_main_op(int p, int q) {
       case ')':
         left_parentheses--;
         break;
+      case TK_AND:
+        if (left_parentheses > 0) continue;
+        if (position != -1) {
+          int type = tokens[position].type;
+          if (type == TK_AND) position = i;
+        } else {
+          position = i;
+        }
+        break;
+      case TK_EQ:
+      case TK_UNEQ:
+        if (left_parentheses > 0) continue;
+        if (position != -1) {
+          int type = tokens[position].type;
+          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ) position = i;
+        } else {
+          position = i;
+        }
+        break;
       case '*':
       case '/':
         if (left_parentheses > 0) continue;
         if (position != -1) {
           int type = tokens[position].type;
-          if (type == '*' || type == '/') position = i;
+          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ ||
+              type == '*' || type == '/')
+            position = i;
         } else {
           position = i;
         }
