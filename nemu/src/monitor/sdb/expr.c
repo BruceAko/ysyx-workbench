@@ -31,6 +31,7 @@ enum {
   TK_HEXNUM,
   TK_REG,
   DEREF,
+  NEG,
 };
 
 static struct rule {
@@ -229,6 +230,19 @@ word_t eval(int p, int q) {
     word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
     printf("%x\n", mem);
     return mem;
+  } else if (q - p == 1 && tokens[p].type == NEG) {
+    switch (tokens[q].type) {
+      case TK_DECNUM:
+        return -atoi(tokens[p].str);
+      case TK_HEXNUM:
+        return -strtoul(tokens[p].str, NULL, 16);
+      case TK_REG:
+        bool success;
+        word_t val = isa_reg_str2val(tokens[p].str, &success);
+        return -val;
+      default:
+        panic("Wrong type");
+    }
   } else {
     int op_pos = find_main_op(p, q);
     int val1 = eval(p, op_pos - 1);
@@ -264,12 +278,17 @@ word_t expr(char* e, bool* success) {
     return 0;
   }
 
-  // recognize DEREF
+  // recognize DEREF and NEG
   for (int i = 0; i < nr_token; i++) {
     if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
                                              tokens[i - 1].type != TK_HEXNUM &&
                                              tokens[i - 1].type != TK_REG))) {
       tokens[i].type = DEREF;
+    } else if (tokens[i].type == '-' &&
+               (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
+                           tokens[i - 1].type != TK_HEXNUM &&
+                           tokens[i - 1].type != TK_REG))) {
+      tokens[i].type = NEG;
     }
   }
 
