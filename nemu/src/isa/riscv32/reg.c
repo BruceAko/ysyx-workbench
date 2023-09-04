@@ -23,9 +23,23 @@ const char* regs[] = {"$0", "ra", "sp",  "gp",  "tp", "t0", "t1", "t2",
                       "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6"};
 
 void isa_reg_display() {
+  printf("%s\t0x%x\t%u\n", "pc", cpu.pc, cpu.pc);
   for (int i = 0; i < 32; i++) {
     printf("%s\t0x%x\t%u\n", regs[i], gpr(i), gpr(i));
   }
 }
 
-word_t isa_reg_str2val(const char* s, bool* success) { return 0; }
+word_t isa_reg_str2val(const char* s, bool* success) {
+  *success = false;
+  if (strcmp("pc", s + 1) == 0) {
+    *success = true;
+    return cpu.pc;
+  }
+  for (int i = 0; i < MUXDEF(CONFIG_RVE, 16, 32); ++i) {
+    if (strcmp(regs[i], s + 1) == 0) {
+      *success = true;
+      return gpr(i);
+    }
+  }
+  return 0;
+}

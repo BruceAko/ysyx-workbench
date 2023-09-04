@@ -113,6 +113,24 @@ static int cmd_si(char* args) {
   return 0;
 }
 
+static int cmd_p(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+  bool success;
+  word_t res = expr(arg, &success);
+  if (success == false) {
+    printf("wrong expression\n");
+    return 0;
+  }
+  printf("[%s] = %u\n", arg, res);
+  return 0;
+}
+
 static int cmd_help(char* args);
 
 static struct {
@@ -125,7 +143,9 @@ static struct {
     {"q", "Exit NEMU", cmd_q},
     {"si", "Single step N times", cmd_si},
     {"info", "Print register or watchpoint info", cmd_info},
-    {"x", "Examine memory", cmd_x}};
+    {"x", "Examine memory", cmd_x},
+    {"p", "Print expression", cmd_p},
+};
 
 #define NR_CMD ARRLEN(cmd_table)
 
