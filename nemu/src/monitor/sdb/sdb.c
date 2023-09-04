@@ -61,16 +61,35 @@ static int cmd_x(char* args) {
     return 0;
   };
   int32_t n = atoi(arg1);
-  uint32_t addr;
-  if (sscanf(arg2, "%x", &addr) <= 0) {
-    printf("wrong argument\n");
+  bool success;
+  uint32_t addr = expr(arg2, &success);
+  if (success == false) {
+    printf("wrong expression\n");
     return 0;
   }
   for (int i = 0; i < n; i++) {
-    printf("%x: 0x%02x\t0x%02x\t0x%02x\t0x%02x\n", addr,
+    printf("%x: 0x%02x\t0x%02x\t0x%02x\t0x%02x\n", addr + i * 4,
            paddr_read(addr + i * 4, 1), paddr_read(addr + 1 + i * 4, 1),
            paddr_read(addr + 2 + i * 4, 1), paddr_read(addr + 3 + i * 4, 1));
   }
+  return 0;
+}
+
+static int cmd_p(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+  bool success;
+  word_t res = expr(arg, &success);
+  if (success == false) {
+    printf("wrong expression\n");
+    return 0;
+  }
+  printf("[%s] = %u\n", arg, res);
   return 0;
 }
 
@@ -110,24 +129,6 @@ static int cmd_si(char* args) {
   } else {
     cpu_exec(atol(args));
   }
-  return 0;
-}
-
-static int cmd_p(char* args) {
-  /* extract the first argument */
-  char* arg = strtok(NULL, " ");
-
-  if (arg == NULL) {
-    printf("miss argument\n");
-    return 0;
-  }
-  bool success;
-  word_t res = expr(arg, &success);
-  if (success == false) {
-    printf("wrong expression\n");
-    return 0;
-  }
-  printf("[%s] = %u\n", arg, res);
   return 0;
 }
 

@@ -228,7 +228,6 @@ word_t eval(int p, int q) {
   } else if (q - p == 1 && tokens[p].type == DEREF &&
              tokens[q].type == TK_HEXNUM) {  // DEREF
     word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
-    printf("%x\n", mem);
     return mem;
   } else if (q - p == 1 && tokens[p].type == NEG) {  //NEG
     switch (tokens[q].type) {
