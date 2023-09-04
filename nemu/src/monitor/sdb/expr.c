@@ -226,11 +226,10 @@ word_t eval(int p, int q) {
     }
     return eval(p + 1, q - 1);
   } else if (q - p == 1 && tokens[p].type == DEREF &&
-             tokens[q].type == TK_HEXNUM) {
+             tokens[q].type == TK_HEXNUM) {  // DEREF
     word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
-    printf("%x\n", mem);
     return mem;
-  } else if (q - p == 1 && tokens[p].type == NEG) {
+  } else if (q - p == 1 && tokens[p].type == NEG) {  //NEG
     switch (tokens[q].type) {
       case TK_DECNUM:
         return -atoi(tokens[q].str);
