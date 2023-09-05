@@ -78,6 +78,7 @@ static int cmd_x(char* args) {
 static int cmd_p(char* args) {
   /* extract the first argument */
   char* arg = strtok(NULL, " ");
+
   if (arg == NULL) {
     printf("miss argument\n");
     return 0;
@@ -89,6 +90,22 @@ static int cmd_p(char* args) {
     return 0;
   }
   printf("[%s] = %u\n", arg, res);
+  return 0;
+}
+
+bool new_wp(char* e);
+
+static int cmd_w(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+  if (new_wp(arg) == false) {
+    printf("too many watchpoints\n");
+    return 0;
+  }
   return 0;
 }
 
@@ -145,6 +162,7 @@ static struct {
     {"info", "Print register or watchpoint info", cmd_info},
     {"x", "Examine memory", cmd_x},
     {"p", "Print expression", cmd_p},
+    {"w", "Set watchpoint", cmd_w},
 };
 
 #define NR_CMD ARRLEN(cmd_table)

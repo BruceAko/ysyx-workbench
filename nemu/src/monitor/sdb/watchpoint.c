@@ -19,10 +19,9 @@
 
 typedef struct watchpoint {
   int NO;
+  char e[128];       // expression
+  word_t old_value;  // the result of expr in the last exec
   struct watchpoint* next;
-
-  /* TODO: Add more members if necessary */
-
 } WP;
 
 static WP wp_pool[NR_WP] = {};
@@ -39,4 +38,30 @@ void init_wp_pool() {
   free_ = wp_pool;
 }
 
-/* TODO: Implement the functionality of watchpoint */
+bool new_wp(char* e) {
+  if (free_ == NULL) {
+    return false;
+  }
+  WP* free_wp = free_;
+  free_ = free_wp->next;
+  free_wp->next = head;
+  head = free_;
+  strcpy(free_wp->e, e);
+  return true;
+}
+
+void free_wp(WP* wp) {
+  WP* prev = head;
+  while (prev != NULL || prev->next != wp) {
+    prev = prev->next;
+  }
+  // wp is not the head of the used wps
+  if (prev != NULL) {
+    prev->next = wp->next;
+  }
+  wp->next = free_;
+  free_ = wp;
+  // initialize wp
+  wp->old_value = 0;
+  memset(wp->e, 0, sizeof(wp->e));
+}
