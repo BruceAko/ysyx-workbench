@@ -91,7 +91,7 @@ void watchpoint_display() {
   }
 }
 
-// return true if a watchpoint's value has changed
+// returns true if a watchpoint's value has changed
 bool scan_whether_changed() {
   WP* wp = head;
   bool success;
