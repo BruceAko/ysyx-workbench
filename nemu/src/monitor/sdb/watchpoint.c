@@ -67,8 +67,8 @@ void free_wp(WP* wp) {
 }
 
 void watchpoint_display() {
+  printf("Num\tWhat\n");
   while (head != NULL) {
-    printf("Num\tWhat\n");
     printf("%d\t%s\n", head->NO, head->e);
     head = head->next;
   }
