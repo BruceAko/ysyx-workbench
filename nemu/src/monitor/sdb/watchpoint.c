@@ -81,8 +81,9 @@ bool free_wp_by_NO(int num) {
 
 void watchpoint_display() {
   printf("Num\tWhat\n");
-  while (head != NULL) {
-    printf("%d\t%s\n", head->NO, head->e);
-    head = head->next;
+  WP* wp = head;
+  while (wp != NULL) {
+    printf("%d\t%s\n", wp->NO, wp->e);
+    wp = wp->next;
   }
 }
