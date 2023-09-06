@@ -45,7 +45,7 @@ bool new_wp(char* e) {
   WP* free_wp = free_;
   free_ = free_wp->next;
   free_wp->next = head;
-  head = free_;
+  head = free_wp;
   strcpy(free_wp->e, e);
   return true;
 }
