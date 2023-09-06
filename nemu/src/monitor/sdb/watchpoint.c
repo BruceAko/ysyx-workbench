@@ -19,6 +19,8 @@
 
 typedef struct watchpoint {
   int NO;
+  char e[128];       // expression
+  word_t old_value;  // the result of expr in the last exec
   struct watchpoint* next;
 } WP;
 
@@ -36,28 +38,55 @@ void init_wp_pool() {
   free_ = wp_pool;
 }
 
-WP* new_wp() {
+bool new_wp(char* e) {
   if (free_ == NULL) {
-    assert(0);
+    return false;
   }
   WP* free_wp = free_;
   free_ = free_wp->next;
   free_wp->next = head;
-  head = free_;
-  return free_wp;
+  head = free_wp;
+  strcpy(free_wp->e, e);
+  return true;
 }
 
 void free_wp(WP* wp) {
   WP* prev = head;
-  while (prev != NULL || prev->next != wp) {
+  while (prev != NULL && prev->next != wp) {
     prev = prev->next;
   }
-  // wp is not the head of the used wps
   if (prev != NULL) {
+    // wp is not the head of the used wps
     prev->next = wp->next;
+  } else {
+    // wp is the head of the used wps
+    head = wp->next;
   }
   wp->next = free_;
   free_ = wp;
   // initialize wp
-  // TODO
+  wp->old_value = 0;
+  memset(wp->e, 0, sizeof(wp->e));
+}
+
+bool free_wp_by_NO(int num) {
+  WP* wp = head;
+  while (wp != NULL) {
+    if (wp->NO == num) {
+      break;
+    }
+    wp = wp->next;
+  }
+  if (wp == NULL) return false;
+  free_wp(wp);
+  return true;
+}
+
+void watchpoint_display() {
+  printf("Num\tWhat\n");
+  WP* wp = head;
+  while (wp != NULL) {
+    printf("%d\t%s\n", wp->NO, wp->e);
+    wp = wp->next;
+  }
 }

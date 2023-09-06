@@ -93,10 +93,44 @@ static int cmd_p(char* args) {
   return 0;
 }
 
+bool new_wp(char*);
+
+static int cmd_w(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+  if (new_wp(arg) == false) {
+    printf("too many watchpoints\n");
+    return 0;
+  }
+  return 0;
+}
+
+bool free_wp_by_NO(int);
+
+static int cmd_d(char* args) {
+  /* extract the first argument */
+  char* arg = strtok(NULL, " ");
+  if (arg == NULL) {
+    printf("miss argument\n");
+    return 0;
+  }
+  if (free_wp_by_NO(atoi(arg)) == false) {
+    printf("fail: can not find the [%s] watchpoint\n", arg);
+    return 0;
+  }
+  return 0;
+}
+
 static int cmd_q(char* args) {
   nemu_state.state = NEMU_QUIT;
   return -1;
 }
+
+void watchpoint_display();
 
 static int cmd_info(char* args) {
   /* extract the first argument */
@@ -112,7 +146,7 @@ static int cmd_info(char* args) {
     isa_reg_display();
   } else if (strcmp(arg, "w") == 0) {
     //watchpoint info
-    printf("watchpoint info\n");
+    watchpoint_display();
   } else {
     printf("wrong argument\n");
   }
@@ -146,6 +180,8 @@ static struct {
     {"info", "Print register or watchpoint info", cmd_info},
     {"x", "Examine memory", cmd_x},
     {"p", "Print expression", cmd_p},
+    {"w", "Set watchpoint", cmd_w},
+    {"d", "Delete watchpoint", cmd_d},
 };
 
 #define NR_CMD ARRLEN(cmd_table)
