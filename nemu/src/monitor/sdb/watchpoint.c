@@ -90,3 +90,24 @@ void watchpoint_display() {
     wp = wp->next;
   }
 }
+
+// return true if a watchpoint's value has changed
+bool scan_whether_changed() {
+  WP* wp = head;
+  bool success;
+  while (wp != NULL) {
+    word_t new_value = expr(wp->e, &success);
+    if (success == false) {
+      printf("wrong expression");
+      return false;
+    }
+    if (new_value != wp->old_value) {
+      printf("Watchpoint %d triggered: %s, old value = %u, new value = %u\n",
+             wp->NO, wp->e, wp->old_value, new_value);
+      wp->old_value = new_value;
+      return true;
+    }
+    wp = wp->next;
+  }
+  return false;
+}
