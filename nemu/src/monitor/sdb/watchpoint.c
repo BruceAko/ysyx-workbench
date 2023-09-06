@@ -55,9 +55,12 @@ void free_wp(WP* wp) {
   while (prev != NULL && prev->next != wp) {
     prev = prev->next;
   }
-  // wp is not the head of the used wps
   if (prev != NULL) {
+    // wp is not the head of the used wps
     prev->next = wp->next;
+  } else {
+    // wp is the head of the used wps
+    head = wp->next;
   }
   wp->next = free_;
   free_ = wp;
