@@ -114,6 +114,8 @@ static int cmd_q(char* args) {
   return -1;
 }
 
+void watchpoint_display();
+
 static int cmd_info(char* args) {
   /* extract the first argument */
   char* arg = strtok(NULL, " ");
@@ -128,7 +130,7 @@ static int cmd_info(char* args) {
     isa_reg_display();
   } else if (strcmp(arg, "w") == 0) {
     //watchpoint info
-    printf("watchpoint info\n");
+    watchpoint_display();
   } else {
     printf("wrong argument\n");
   }
