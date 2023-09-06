@@ -69,13 +69,13 @@ void free_wp(WP* wp) {
 bool free_wp_by_NO(int num) {
   WP* wp = head;
   while (wp != NULL) {
-    printf("%d\n", wp->NO);
     if (wp->NO == num) {
       break;
     }
     wp = wp->next;
   }
   if (wp == NULL) return false;
+  free_wp(wp);
   return true;
 }
 
