@@ -52,7 +52,7 @@ bool new_wp(char* e) {
 
 void free_wp(WP* wp) {
   WP* prev = head;
-  while (prev != NULL || prev->next != wp) {
+  while (prev != NULL && prev->next != wp) {
     prev = prev->next;
   }
   // wp is not the head of the used wps
@@ -64,6 +64,15 @@ void free_wp(WP* wp) {
   // initialize wp
   wp->old_value = 0;
   memset(wp->e, 0, sizeof(wp->e));
+}
+
+bool free_wp_by_NO(int num) {
+  WP* wp = head;
+  while (wp != NULL && wp->NO != num) {
+    wp = wp->next;
+  }
+  if (wp == NULL) return false;
+  return true;
 }
 
 void watchpoint_display() {
