@@ -3,4 +3,5 @@
 !*.v
 !*.nxdc
 !*.md
+!makefile
 build/
