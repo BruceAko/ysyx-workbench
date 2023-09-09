@@ -18,7 +18,7 @@ endif
 # The Target Build
 all: $(TARGET) tests
 
-dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
+dev: CFLAGS=-g -O2 -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
 
 $(TARGET): CFLAGS += -fPIC
