@@ -1,0 +1,26 @@
+*.*
+*
+!*/
+!Makefile
+!*.mk
+!*.scala
+!*.[cSh]
+!*.v
+!*.cpp
+!*.cc
+!*.nxdc
+!.gitignore
+!.scalafmt.conf
+!build.sc
+!README.md
+build/
+
+# mill
+out/
+.bsp/
+.idea/
+.idea_modules/
+test_run_dir/
+
+# metals
+.metals/
