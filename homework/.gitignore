@@ -1,6 +1,9 @@
 !*.c
 !*.cpp
+!*.h
 !*.v
 !*.nxdc
 !*.md
+!*.sh
+!Makefile
 build/
