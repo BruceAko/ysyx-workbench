@@ -60,7 +60,7 @@ enum {
 #define immJ()                                                                                                      \
   do {                                                                                                              \
     *imm = (SEXT(BITS(i, 31, 31), 1) << 20) | BITS(i, 19, 12) << 12 | BITS(i, 20, 20) << 11 | BITS(i, 30, 21) << 1; \
-    printf("imm=%ls\n", imm);                                                                                       \
+    printf("imm=%d\n", *imm);                                                                                       \
   } while (0)
 
 static void decode_operand(Decode* s, int* rd, word_t* src1, word_t* src2, word_t* imm, int type) {
