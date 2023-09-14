@@ -73,9 +73,8 @@ static void exec_once(Decode* s, vaddr_t pc) {
 
 #ifndef CONFIG_ISA_loongarch32r
   void disassemble(char* str, int size, uint64_t pc, uint8_t* code, int nbyte);
-  disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-              MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc),
-              (uint8_t*)&s->isa.inst.val, ilen);
+  disassemble(p, s->logbuf + sizeof(s->logbuf) - p, MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t*)&s->isa.inst.val,
+              ilen);
 #else
   p[0] = '\0';  // the upstream llvm does not support loongarch32r
 #endif
@@ -99,8 +98,7 @@ static void statistic() {
   Log("host time spent = " NUMBERIC_FMT " us", g_timer);
   Log("total guest instructions = " NUMBERIC_FMT, g_nr_guest_inst);
   if (g_timer > 0)
-    Log("simulation frequency = " NUMBERIC_FMT " inst/s",
-        g_nr_guest_inst * 1000000 / g_timer);
+    Log("simulation frequency = " NUMBERIC_FMT " inst/s", g_nr_guest_inst * 1000000 / g_timer);
   else
     Log("Finish running in less than 1 us and can not calculate the simulation "
         "frequency");
@@ -140,11 +138,9 @@ void cpu_exec(uint64_t n) {
     case NEMU_END:
     case NEMU_ABORT:
       Log("nemu: %s at pc = " FMT_WORD,
-          (nemu_state.state == NEMU_ABORT
-               ? ANSI_FMT("ABORT", ANSI_FG_RED)
-               : (nemu_state.halt_ret == 0
-                      ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
-                      : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
+          (nemu_state.state == NEMU_ABORT ? ANSI_FMT("ABORT", ANSI_FG_RED)
+                                          : (nemu_state.halt_ret == 0 ? ANSI_FMT("HIT GOOD TRAP", ANSI_FG_GREEN)
+                                                                      : ANSI_FMT("HIT BAD TRAP", ANSI_FG_RED))),
           nemu_state.halt_pc);
       // fall through
     case NEMU_QUIT:
