@@ -5,6 +5,12 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+#if defined(CONFIG_ISA64)
+typedef uint64_t word_t;
+#else
+typedef uint32_t word_t;
+#endif
+
 #define NUM_LEN 32
 
 static char* __itoa(int num, char* buff, uint16_t base) {
@@ -33,7 +39,7 @@ static char* __itoa(int num, char* buff, uint16_t base) {
 
 static char* __ptoa(void* p, char* buff) {
   static const char sym[] = "0123456789abcdef";
-  uint32_t num = (uint32_t)p;
+  word_t num = (word_t)p;
   char tmp[NUM_LEN];
   if (num == 0) {
     buff[0] = '0';
