@@ -9,7 +9,6 @@ size_t strlen(const char* s) {
   while (s[i++] != '\0') {
     cnt++;
   }
-
   return cnt;
 }
 
@@ -38,7 +37,6 @@ char* strcat(char* dst, const char* src) {
   size_t pos_src = 0;
   for (; src[pos_src] != '\0'; pos_src++, pos_dst++) dst[pos_dst] = src[pos_src];
   dst[pos_dst] = '\0';
-
   return dst;
 }
 
@@ -47,7 +45,6 @@ char* strncat(char* dst, const char* src, size_t n) {
   size_t pos_src = 0;
   for (; (pos_src) < n && (src[pos_src] != '\0'); pos_src++, pos_dst++) dst[pos_dst] = src[pos_src];
   dst[pos_dst] = '\0';
-
   return dst;
 }
 
@@ -61,7 +58,6 @@ int strcmp(const char* s1, const char* s2) {
     else
       return -1;
   }
-
   if (s1[i] == '\0' && s2[i] == '\0')
     return 0;
   else if (s1[i] == '\0')
@@ -80,7 +76,6 @@ int strncmp(const char* s1, const char* s2, size_t n) {
     else
       return -1;
   }
-
   if ((s1[i] != '\0' && s2[i] != '\0') || (s1[i] == '\0' && s2[i] == '\0'))
     return 0;
   else if (s1[i] == '\0')
@@ -99,9 +94,7 @@ void* memset(void* s, int c, size_t n) {
 void* memmove(void* dst, const void* src, size_t n) {
   char tmp[n];
   for (size_t i = 0; i < n; ++i) tmp[i] = *((char*)src + i);
-
   for (size_t i = 0; i < n; ++i) *((char*)dst + i) = tmp[i];
-
   return dst;
 }
 
