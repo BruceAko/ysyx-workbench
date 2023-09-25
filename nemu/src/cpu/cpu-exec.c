@@ -91,8 +91,8 @@ static void execute(uint64_t n) {
     if (cycle % 100 == 0) {
       word_t head = paddr_read(cpu.gpr[28], 4);
       word_t tail = paddr_read(cpu.gpr[29], 4);
-      printf("head:%u tail:%u \n", head, tail);
       if (head != tail) {
+        printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
         cpu.gpr[1] = cpu.pc;        // $ra = $pc
         cpu.gpr[10] = cpu.gpr[28];  // $a0 = $t3
         cpu.gpr[11] = cpu.gpr[29];  // $a1 = $t4
