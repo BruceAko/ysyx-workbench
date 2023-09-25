@@ -91,13 +91,12 @@ static void execute(uint64_t n) {
     if (cycle % 100 == 0) {
       word_t head = paddr_read(cpu.gpr[28], 4);
       word_t tail = paddr_read(cpu.gpr[29], 4);
-      word_t callback_pc = paddr_read(cpu.gpr[30], 4);
-      printf("head:%u tail:%u callback_pc:%u\n", head, tail, callback_pc);
+      printf("head:%u tail:%u \n", head, tail);
       if (head != tail) {
         cpu.gpr[1] = cpu.pc;        // $ra = $pc
         cpu.gpr[14] = cpu.gpr[28];  // $a4 = $t3
         cpu.gpr[15] = cpu.gpr[29];  // $a5 = $t4
-        cpu.pc = callback_pc;       // $pc = $t5
+        cpu.pc = cpu.gpr[30];       // $pc = $t5
       }
     }
     exec_once(&s, cpu.pc);
