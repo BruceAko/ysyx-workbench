@@ -17,6 +17,7 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
+#include <memory/paddr.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -86,7 +87,16 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     ++cycle;
+    // CPU执行一百次，辅助电路检查一次
     if (cycle % 100 == 0) {
+      word_t head = paddr_read(cpu.gpr[28], 4);
+      word_t tail = paddr_read(cpu.gpr[29], 4);
+      if (head != tail) {
+        cpu.gpr[31] = cpu.pc;
+        cpu.pc = cpu.gpr[30];
+        cpu.gpr[14] = cpu.gpr[28];
+        cpu.gpr[15] = cpu.gpr[29];
+      }
     }
     exec_once(&s, cpu.pc);
     g_nr_guest_inst++;
