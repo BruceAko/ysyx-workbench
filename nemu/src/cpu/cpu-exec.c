@@ -29,6 +29,7 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0;  // unit: us
 static bool g_print_step = false;
+static uint64_t cycle = 0;
 
 void device_update();
 bool scan_whether_changed();
@@ -84,6 +85,9 @@ static void exec_once(Decode* s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
+    ++cycle;
+    if (cycle % 100 == 0) {
+    }
     exec_once(&s, cpu.pc);
     g_nr_guest_inst++;
     trace_and_difftest(&s, cpu.pc);
