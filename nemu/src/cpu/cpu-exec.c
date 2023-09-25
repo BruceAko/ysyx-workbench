@@ -57,6 +57,7 @@ static void exec_once(Decode* s, vaddr_t pc) {
   s->snpc = pc;
   isa_exec_once(s);
   cpu.pc = s->dnpc;
+  printf("!!!!!!%u\n", cpu.pc);
 #ifdef CONFIG_ITRACE
   char* p = s->logbuf;
   p += snprintf(p, sizeof(s->logbuf), FMT_WORD ":", s->pc);
@@ -97,7 +98,6 @@ static void execute(uint64_t n) {
         cpu.gpr[10] = cpu.gpr[28];  // $a0 = $t3
         cpu.gpr[11] = cpu.gpr[29];  // $a1 = $t4
         cpu.pc = cpu.gpr[30];       // $pc = $t5
-        printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
       }
     }
     exec_once(&s, cpu.pc);
