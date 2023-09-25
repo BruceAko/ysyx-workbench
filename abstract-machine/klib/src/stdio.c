@@ -12,6 +12,7 @@ typedef uint32_t word_t;
 #endif
 
 #define NUM_LEN 32
+#define OSTRING_LEN 5120
 
 static char* __itoa(int num, char* buff, uint16_t base) {
   static const char sym[] = "0123456789abcdef";
@@ -57,7 +58,17 @@ static char* __ptoa(void* p, char* buff) {
   return (buff - 1);
 }
 
-int printf(const char* fmt, ...) { panic("Not implemented"); }
+int printf(const char* fmt, ...) {
+  char out[OSTRING_LEN];
+  va_list ap;
+  va_start(ap, fmt);
+  int num = vsprintf(out, fmt, ap);
+  va_end(ap);
+  for (int i = 0; i < num; ++i) {
+    putch(out[i]);
+  }
+  return num;
+}
 
 int vsprintf(char* out, const char* fmt, va_list ap) {
   char* pout = out;
