@@ -94,8 +94,8 @@ static void execute(uint64_t n) {
       printf("head:%u tail:%u \n", head, tail);
       if (head != tail) {
         cpu.gpr[1] = cpu.pc;        // $ra = $pc
-        cpu.gpr[14] = cpu.gpr[28];  // $a4 = $t3
-        cpu.gpr[15] = cpu.gpr[29];  // $a5 = $t4
+        cpu.gpr[10] = cpu.gpr[28];  // $a0 = $t3
+        cpu.gpr[11] = cpu.gpr[29];  // $a1 = $t4
         cpu.pc = cpu.gpr[30];       // $pc = $t5
       }
     }
