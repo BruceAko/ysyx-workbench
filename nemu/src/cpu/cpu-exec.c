@@ -89,8 +89,8 @@ static void execute(uint64_t n) {
     ++cycle;
     // CPU执行一百次，辅助电路检查一次
     if (cycle % 2000 == 0) {
-      word_t head = paddr_read(cpu.gpr[28], 4);
-      word_t tail = paddr_read(cpu.gpr[29], 4);
+      word_t head = paddr_read(cpu.gpr[30], 4);
+      word_t tail = paddr_read(cpu.gpr[31], 4);
       if (head != tail) {
         printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
         /*压栈*/
