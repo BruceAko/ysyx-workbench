@@ -87,6 +87,7 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     ++cycle;
+    printf("cycle:%lu\n", cycle);
     // CPU执行一百次，辅助电路检查一次
     if (cycle % 100 == 0) {
       word_t head = paddr_read(cpu.gpr[28], 4);
