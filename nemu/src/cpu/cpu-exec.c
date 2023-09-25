@@ -92,10 +92,10 @@ static void execute(uint64_t n) {
       word_t head = paddr_read(cpu.gpr[28], 4);
       word_t tail = paddr_read(cpu.gpr[29], 4);
       if (head != tail) {
-        cpu.gpr[31] = cpu.pc;
+        cpu.gpr[1] = cpu.pc;        // $ra
+        cpu.gpr[14] = cpu.gpr[28];  // $a4
+        cpu.gpr[15] = cpu.gpr[29];  // $a5
         cpu.pc = cpu.gpr[30];
-        cpu.gpr[14] = cpu.gpr[28];
-        cpu.gpr[15] = cpu.gpr[29];
       }
     }
     exec_once(&s, cpu.pc);
