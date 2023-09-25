@@ -96,7 +96,7 @@ static void execute(uint64_t n) {
         cpu.gpr[1] = cpu.pc;        // $ra = $pc
         cpu.gpr[10] = cpu.gpr[28];  // $a0 = $t3
         cpu.gpr[11] = cpu.gpr[29];  // $a1 = $t4
-        cpu.pc = cpu.gpr[31];       // $pc = $t5
+        cpu.pc = cpu.gpr[30];       // $pc = $t5
       }
     }
     exec_once(&s, cpu.pc);
