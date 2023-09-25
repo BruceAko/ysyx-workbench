@@ -95,8 +95,8 @@ static void execute(uint64_t n) {
         printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
         /*压栈，保存ra等寄存器*/
         cpu.gpr[3] = cpu.pc;        // $gp = $pc
-        cpu.gpr[11] = cpu.gpr[30];  // $a1 = $t5
-        cpu.gpr[10] = cpu.gpr[31];  // $a0 = $t6
+        cpu.gpr[10] = cpu.gpr[30];  // $a1 = $t5
+        cpu.gpr[11] = cpu.gpr[31];  // $a0 = $t6
         cpu.pc = cpu.gpr[7];        // $pc = $t2
       }
     }
