@@ -92,7 +92,7 @@ static void execute(uint64_t n) {
       word_t head = paddr_read(cpu.gpr[28], 4);
       word_t tail = paddr_read(cpu.gpr[29], 4);
       word_t callback_pc = paddr_read(cpu.gpr[30], 4);
-      printf("head:%u tail:%u \n", head, tail);
+      printf("head:%u tail:%u callback_pc:%u\n", head, tail, callback_pc);
       if (head != tail) {
         cpu.gpr[1] = cpu.pc;        // $ra = $pc
         cpu.gpr[14] = cpu.gpr[28];  // $a4 = $t3
