@@ -93,8 +93,8 @@ static void execute(uint64_t n) {
       word_t tail = paddr_read(cpu.gpr[31], 4);
       if (head != tail) {
         printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
-        /*压栈*/
-        cpu.gpr[1] = cpu.pc;        // $ra = $pc
+        /*压栈，保存ra等寄存器*/
+        cpu.gpr[3] = cpu.pc;        // $gp = $pc
         cpu.gpr[10] = cpu.gpr[30];  // $a0 = $t5
         cpu.gpr[11] = cpu.gpr[31];  // $a1 = $t6
         cpu.pc = cpu.gpr[7];        // $pc = $t2
