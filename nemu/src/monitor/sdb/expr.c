@@ -92,13 +92,12 @@ static bool make_token(char* e) {
   while (e[position] != '\0') {
     /* Try all rules one by one. */
     for (i = 0; i < NR_REGEX; i++) {
-      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 &&
-          pmatch.rm_so == 0) {
+      if (regexec(&re[i], e + position, 1, &pmatch, 0) == 0 && pmatch.rm_so == 0) {
         char* substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
-            rules[i].regex, position, substr_len, substr_len, substr_start);
+        // Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s", i,
+        //     rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -182,9 +181,7 @@ int find_main_op(int p, int q) {
         if (left_parentheses > 0) continue;
         if (position != -1) {
           int type = tokens[position].type;
-          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ ||
-              type == '*' || type == '/')
-            position = i;
+          if (type == TK_AND || type == TK_EQ || type == TK_UNEQ || type == '*' || type == '/') position = i;
         } else {
           position = i;
         }
@@ -225,8 +222,7 @@ word_t eval(int p, int q) {
       panic("Unmatched parentheses");
     }
     return eval(p + 1, q - 1);
-  } else if (q - p == 1 && tokens[p].type == DEREF &&
-             tokens[q].type == TK_HEXNUM) {  // DEREF
+  } else if (q - p == 1 && tokens[p].type == DEREF && tokens[q].type == TK_HEXNUM) {  // DEREF
     word_t mem = paddr_read(strtoul(tokens[q].str, NULL, 16), 4);
     return mem;
   } else if (q - p == 1 && tokens[p].type == NEG) {  //NEG
@@ -279,14 +275,11 @@ word_t expr(char* e, bool* success) {
 
   // recognize DEREF and NEG
   for (int i = 0; i < nr_token; i++) {
-    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
-                                             tokens[i - 1].type != TK_HEXNUM &&
+    if (tokens[i].type == '*' && (i == 0 || (tokens[i - 1].type != TK_DECNUM && tokens[i - 1].type != TK_HEXNUM &&
                                              tokens[i - 1].type != TK_REG))) {
       tokens[i].type = DEREF;
-    } else if (tokens[i].type == '-' &&
-               (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
-                           tokens[i - 1].type != TK_HEXNUM &&
-                           tokens[i - 1].type != TK_REG))) {
+    } else if (tokens[i].type == '-' && (i == 0 || (tokens[i - 1].type != TK_DECNUM &&
+                                                    tokens[i - 1].type != TK_HEXNUM && tokens[i - 1].type != TK_REG))) {
       tokens[i].type = NEG;
     }
   }
