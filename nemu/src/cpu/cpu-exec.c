@@ -93,15 +93,16 @@ static void execute(uint64_t n) {
       word_t tail = paddr_read(cpu.gpr[31], 4);
       printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[7]);
       if (head != tail) {
-        /*压栈，保存a2 a3 a4 a5寄存器*/
-        cpu.gpr[2] = cpu.gpr[2] - 16;
-        paddr_write(cpu.gpr[2], 4, cpu.gpr[12]);
-        paddr_write(cpu.gpr[2] + 4, 4, cpu.gpr[13]);
-        paddr_write(cpu.gpr[2] + 8, 4, cpu.gpr[14]);
-        paddr_write(cpu.gpr[2] + 12, 4, cpu.gpr[15]);
+        /*压栈，保存a1 a2 a3 a4 a5寄存器*/
+        cpu.gpr[2] = cpu.gpr[2] - 20;
+        paddr_write(cpu.gpr[2], 4, cpu.gpr[11]);
+        paddr_write(cpu.gpr[2] + 4, 4, cpu.gpr[12]);
+        paddr_write(cpu.gpr[2] + 8, 4, cpu.gpr[13]);
+        paddr_write(cpu.gpr[2] + 12, 4, cpu.gpr[14]);
+        paddr_write(cpu.gpr[2] + 16, 4, cpu.gpr[15]);
         cpu.gpr[3] = cpu.pc;        // $gp = $pc
         cpu.gpr[10] = cpu.gpr[30];  // $a0 = $t5
-        cpu.gpr[11] = cpu.gpr[31];  // $a5 = $t6
+        cpu.gpr[11] = cpu.gpr[31];  // $a1 = $t6
         cpu.pc = cpu.gpr[7];        // $pc = $t2
       }
     }
