@@ -87,16 +87,16 @@ static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
     ++cycle;
-    // CPU执行一百次，辅助电路检查一次
+    // CPU执行两千次，辅助电路检查一次
     if (cycle % 2000 == 0) {
       word_t head = paddr_read(cpu.gpr[30], 4);
       word_t tail = paddr_read(cpu.gpr[31], 4);
       if (head != tail) {
-        printf("head:%u tail:%u pc:%u jpc:%u\n", head, tail, cpu.pc, cpu.gpr[30]);
+        printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[30]);
         /*压栈，保存ra等寄存器*/
         cpu.gpr[3] = cpu.pc;        // $gp = $pc
-        cpu.gpr[10] = cpu.gpr[30];  // $a1 = $t5
-        cpu.gpr[11] = cpu.gpr[31];  // $a0 = $t6
+        cpu.gpr[10] = cpu.gpr[30];  // $a0 = $t5
+        cpu.gpr[11] = cpu.gpr[31];  // $a5 = $t6
         cpu.pc = cpu.gpr[7];        // $pc = $t2
       }
     }
