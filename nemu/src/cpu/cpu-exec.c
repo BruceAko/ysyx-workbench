@@ -91,7 +91,7 @@ static void execute(uint64_t n) {
     if (cycle % 1832 == 0) {
       word_t head = paddr_read(cpu.gpr[30], 4);
       word_t tail = paddr_read(cpu.gpr[31], 4);
-      printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[7]);
+      // printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[7]);
       if (head != tail) {
         /*压栈，保存a1 a2 a3 a4 a5寄存器*/
         cpu.gpr[2] = cpu.gpr[2] - 20;
