@@ -88,7 +88,7 @@ static void execute(uint64_t n) {
   for (; n > 0; n--) {
     ++cycle;
     // CPU执行两千次，辅助电路检查一次
-    if (cycle % 2000 == 0) {
+    if (cycle % 1832 == 0) {
       word_t head = paddr_read(cpu.gpr[30], 4);
       word_t tail = paddr_read(cpu.gpr[31], 4);
       printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[7]);
