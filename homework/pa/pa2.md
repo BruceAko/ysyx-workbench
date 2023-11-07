@@ -1,4 +1,4 @@
-# pa1
+# pa2
 
 ## 必答题
 
@@ -39,7 +39,7 @@ isa_fetch_decode() 将 instr_fetch() 的返回结果存储到 s->instr.val 中�
 
 这里有一个有趣的代码细节是 nemu 为了抽象化不同 ISA 的差异，在顶层的代码中使用的是相同的类型名称，这些名称在底层才会分出区别，例如 ISADecodeInfo 类型的定义是
 
-typedef concat(__GUEST_ISA__, _ISADecodeInfo) ISADecodeInfo;
+typedef concat(\_\_GUEST_ISA__,_ISADecodeInfo) ISADecodeInfo;
 
 concat 函数的功能是将两个字符串拼接起来，从而实现了根据选择的 ISA 的不同定义不同的 ISADecodeInfo，将 ISA 的差异对上层抽象了。
 
@@ -73,7 +73,7 @@ def_INSTR_TAB("??????? ????? ????? ??? ????? xxxxx xx", xxx)
 - 读取窗口的宽和高。程序读取窗口大小通过读取 AM 提供的 AM_GPU_CONFIG 抽象寄存器实现。AM_GPU_CONFIG 抽象寄存器则通过访问 nemu 提供的 I/O 端口来获得这些参数。
 - 将整个画布涂成紫色的。程序向画布输出颜色通过向 AM 提供的 AM_GPU_FBDRAW 抽象寄存器写入内容来实现。抽象寄存器会接收到开始绘制的位置的坐标，绘制内容数量，绘制的内容的 buffer，和一个是否立即同步的布尔变量。抽象寄存器的行为很简单，就是将对应的数据写到 nemu 的 I/O 端口中。nemu 的硬件会每隔一段时间检查是否有同步信号，如果有就将缓冲区的内容输出到屏幕上。
 - 对各种字母的颜色做好设定。
-- 
+
 打字小游戏的主循环是一个 while(1) {} ，在循环中会做这样一些事情：
 
 game_logic_update：每次循环中都会根据和上次更新的时间差进行若干次游戏逻辑更新。这里程序调用时间函数会使用 AM 提供的抽象寄存器 AM_TIMER_UPTIME 来读取游戏已经开始的时间。AM中读取这个抽象寄存器的逻辑是访问 nemu 的时钟 I/O 端口。
@@ -138,39 +138,39 @@ hello 中的 Makefile 内容比较简单：将 NAME 和 SRC 设置好，然后�
 在 Makefile 中有
 
 $(DST_DIR)/%.o: %.c
-	@mkdir -p $(dir $@) && echo + CC $<
-	@$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
+ @mkdir -p $(dir $@) && echo + CC $<
+ @$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
 
 它会中所有的.c文件编译成.o文件放进目录DST_DIR中。这里DST_DIR是 AM 下的 build 目录。
 
 在 Makefile 中有
 
 $(LIBS): %:
-	@$(MAKE) -s -C $(AM_HOME)/$* archive
+ @$(MAKE) -s -C $(AM_HOME)/$* archive
 
 它会把我们自己写的库函数（如 klib）打包成 archive。
 
 在 Makefile 中有
 
 $(IMAGE).elf: $(OBJS) am $(LIBS)
-	@echo + LD "->" $(IMAGE_REL).elf
-	@$(LD) $(LDFLAGS) -o $(IMAGE).elf --start-group $(LINKAGE) --end-group
+ @echo + LD "->" $(IMAGE_REL).elf
+ @$(LD) $(LDFLAGS) -o $(IMAGE).elf --start-group $(LINKAGE) --end-group
 
 它会将所有的 .o 文件全部链接起来生成一个 .elf 文件。这里的 $(OBJS) 的生成方法不难：将 SRC 中所有的 .c 换成了 .o，加上相对应的路径前缀即可。
 
 在 nemu.mk 中有
 
 image: $(IMAGE).elf
-	@$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
-	@echo + OBJCOPY "->" $(IMAGE_REL).bin
-	@$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
+ @$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
+ @echo + OBJCOPY "->" $(IMAGE_REL).bin
+ @$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
 
 它使用 OBJCOPY 命令将 .elf 文件中的一些节做了修改，然后粘贴进了 .bin 文件中。
 
 在 nemu.mk 中有
 
 run: image
-	$(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
+ $(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
 
 它相当于在 $NEMU_HOME 目录下使用了命令 make ISA=riscv32 run ARGS=... IMG=...，这样就实现了将镜像加载到 nemu 上运行。
 
