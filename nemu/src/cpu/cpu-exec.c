@@ -17,7 +17,6 @@
 #include <cpu/decode.h>
 #include <cpu/difftest.h>
 #include <locale.h>
-#include <memory/paddr.h>
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -30,7 +29,6 @@ CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0;  // unit: us
 static bool g_print_step = false;
-static uint64_t cycle = 0;
 
 void device_update();
 bool scan_whether_changed();
@@ -86,26 +84,6 @@ static void exec_once(Decode* s, vaddr_t pc) {
 static void execute(uint64_t n) {
   Decode s;
   for (; n > 0; n--) {
-    ++cycle;
-    // CPU执行两千次，辅助电路检查一次
-    if (cycle % 1832 == 0) {
-      word_t head = paddr_read(cpu.gpr[30], 4);
-      word_t tail = paddr_read(cpu.gpr[31], 4);
-      // printf("head:%x tail:%x pc:%x jpc:%x\n", head, tail, cpu.pc, cpu.gpr[7]);
-      if (head != tail) {
-        /*压栈，保存a1 a2 a3 a4 a5寄存器*/
-        cpu.gpr[2] = cpu.gpr[2] - 20;
-        paddr_write(cpu.gpr[2], 4, cpu.gpr[11]);
-        paddr_write(cpu.gpr[2] + 4, 4, cpu.gpr[12]);
-        paddr_write(cpu.gpr[2] + 8, 4, cpu.gpr[13]);
-        paddr_write(cpu.gpr[2] + 12, 4, cpu.gpr[14]);
-        paddr_write(cpu.gpr[2] + 16, 4, cpu.gpr[15]);
-        cpu.gpr[3] = cpu.pc;        // $gp = $pc
-        cpu.gpr[10] = cpu.gpr[30];  // $a0 = $t5
-        cpu.gpr[11] = cpu.gpr[31];  // $a1 = $t6
-        cpu.pc = cpu.gpr[7];        // $pc = $t2
-      }
-    }
     exec_once(&s, cpu.pc);
     g_nr_guest_inst++;
     trace_and_difftest(&s, cpu.pc);

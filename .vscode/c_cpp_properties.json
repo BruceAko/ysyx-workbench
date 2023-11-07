@@ -5,13 +5,13 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/npc/build/obj_dir/*",
-                "abstract-machine/am/include/arch/*",
-                "abstract-machine/am/include/*",
+                "${workspaceFolder}/abstract-machine/am/include/arch/*",
+                "${workspaceFolder}/abstract-machine/am/include/*",
+                "${workspaceFolder}/abstract-machine/am/src",
                 "${workspaceFolder}/nemu/include/**",
                 "${workspaceFolder}/navy-apps/**",
-                "nanos-lite/include/*",
                 "${workspaceFolder}/navy-apps/libs/libminiSDL/include/*",
-                "${workspaceFolder}/abstract-machine/am/src"
+                "${workspaceFolder}/nanos-lite/include/*"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
