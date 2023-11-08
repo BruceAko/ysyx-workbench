@@ -3,7 +3,6 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**",
                 "${workspaceFolder}/npc/build/obj_dir/*",
                 "${workspaceFolder}/abstract-machine/am/include/arch/*",
                 "${workspaceFolder}/abstract-machine/am/include/*",
