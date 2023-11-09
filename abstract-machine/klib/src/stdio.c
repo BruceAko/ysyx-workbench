@@ -12,9 +12,26 @@ typedef uint32_t word_t;
 #endif
 
 #define NUM_LEN 32
+#define OSTRING_LEN 5120
+
+int printf(const char* fmt, ...) {
+  char out[OSTRING_LEN];
+
+  va_list ap;
+  va_start(ap, fmt);
+  int num = vsprintf(out, fmt, ap);
+  va_end(ap);
+
+  for (int i = 0; i < num; ++i) {
+    putch(out[i]);
+  }
+
+  return num;
+}
 
 static char* __itoa(int num, char* buff, uint16_t base) {
   static const char sym[] = "0123456789abcdef";
+
   char tmp[NUM_LEN];
   bool is_neg = false;
   if (num == 0) {
@@ -26,38 +43,44 @@ static char* __itoa(int num, char* buff, uint16_t base) {
     buff++;
     num = -num;
   }
+
   uint8_t i = 0;
   while (num != 0) {
     tmp[i] = sym[num % base];
     num /= base;
     i++;
   }
+
   for (int j = i - 1; j >= 0; --j) buff[i - 1 - j] = tmp[j];
   buff[i] = '\0';
+
   return is_neg ? (buff - 1) : buff;
 }
 
 static char* __ptoa(void* p, char* buff) {
   static const char sym[] = "0123456789abcdef";
+
   word_t num = (word_t)p;
   char tmp[NUM_LEN];
+
   if (num == 0) {
     buff[0] = '0';
     buff[1] = '\0';
     return (buff - 1);
   }
+
   uint8_t i = 0;
   while (num != 0) {
     tmp[i] = sym[num % 16];
     num /= 16;
     i++;
   }
+
   for (int j = i - 1; j >= 0; --j) buff[i - 1 - j] = tmp[j];
   buff[i] = '\0';
+
   return (buff - 1);
 }
-
-int printf(const char* fmt, ...) { panic("Not implemented"); }
 
 int vsprintf(char* out, const char* fmt, va_list ap) {
   char* pout = out;
@@ -99,7 +122,6 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
           }
           case 's': {
             const char* str = va_arg(ap, char*);
-
             if (!left_align) {
               for (int j = 0; j < width - (int)strlen(str); ++j) {
                 *(pout++) = ' ';
@@ -154,6 +176,7 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
           }
           default: {
             printf("print format is wrong!\n");
+            // Wrong format!!!
             assert(0);
           }
         }
@@ -162,6 +185,9 @@ int vsprintf(char* out, const char* fmt, va_list ap) {
     ++i;
   }
   *pout = '\0';
+
+  va_end(ap);
+
   return strlen(out);
 }
 
@@ -170,6 +196,7 @@ int sprintf(char* out, const char* fmt, ...) {
   va_start(ap, fmt);
   int num = vsprintf(out, fmt, ap);
   va_end(ap);
+
   return num;
 }
 
