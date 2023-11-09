@@ -1,16 +1,11 @@
 #include <am.h>
-#include <klib.h>
 #include <nemu.h>
 
 static uint64_t sys_init_time;
 
-void __am_timer_init() {
-  sys_init_time = (((uint64_t)inl(RTC_ADDR + 4) << 32) + (uint64_t)inl(RTC_ADDR));
-  printf("time is %d\n", (int)sys_init_time / 1000000);
-}
+void __am_timer_init() { sys_init_time = (((uint64_t)inl(RTC_ADDR + 4) << 32) + (uint64_t)inl(RTC_ADDR)); }
 
 void __am_timer_uptime(AM_TIMER_UPTIME_T* uptime) {
-  printf("time is %d\n", (int)uptime->us);
   uptime->us = (((uint64_t)inl(RTC_ADDR + 4) << 32) + (uint64_t)inl(RTC_ADDR)) - sys_init_time;
 }
 
