@@ -5,6 +5,12 @@
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
+#if defined(CONFIG_ISA64)
+typedef uint64_t word_t;
+#else
+typedef uint32_t word_t;
+#endif
+
 int vsprintf(char* out, const char* fmt, va_list ap);
 int vsnprintf(char* out, size_t n, const char* fmt, va_list ap);
 
