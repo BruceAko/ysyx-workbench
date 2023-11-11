@@ -7,6 +7,7 @@
                 "${workspaceFolder}/abstract-machine/am/include/arch/*",
                 "${workspaceFolder}/abstract-machine/am/include/*",
                 "${workspaceFolder}/abstract-machine/am/src",
+                "${workspaceFolder}/abstract-machine/klib/include",
                 "${workspaceFolder}/nemu/include/**",
                 "${workspaceFolder}/navy-apps/**",
                 "${workspaceFolder}/navy-apps/libs/libminiSDL/include/*",
@@ -17,7 +18,6 @@
             "cStandard": "c17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4
