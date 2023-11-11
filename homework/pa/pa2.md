@@ -3,6 +3,7 @@
 ## 总结
 
 qemu：硬件
+
 am：类似于驱动，提供api，使得用户可以在am上运行程序
 
 ## 必答题
@@ -127,7 +128,7 @@ render ：这个函数负责更新屏幕。该函数会将字母原本所处位�
 
 ### 了解 Makefile
 
-请描述你在am-kernels/kernels/hello/目录下敲入make ARCH=$ISA-nemu 后, make程序如何组织.c和.h文件, 最终生成可执行文件am-kernels/kernels/hello/build/hello-$ISA-nemu.elf. (这个问题包括两个方面:Makefile的工作方式和编译链接的过程.) 关于Makefile工作方式的提示:
+请描述你在am-kernels/kernels/hello/目录下敲入make ARCH=\$ISA-nemu 后, make程序如何组织.c和.h文件, 最终生成可执行文件am-kernels/kernels/hello/build/hello-\$ISA-nemu.elf. (这个问题包括两个方面:Makefile的工作方式和编译链接的过程.) 关于Makefile工作方式的提示:
 
 - Makefile中使用了变量, 包含文件等特性
 - Makefile运用并重写了一些implicit rules
@@ -142,40 +143,50 @@ hello 中的 Makefile 内容比较简单：将 NAME 和 SRC 设置好，然后�
 
 在 Makefile 中有
 
+```makefile
 $(DST_DIR)/%.o: %.c
  @mkdir -p $(dir $@) && echo + CC $<
  @$(CC) -std=gnu11 $(CFLAGS) -c -o $@ $(realpath $<)
+```
 
 它会中所有的.c文件编译成.o文件放进目录DST_DIR中。这里DST_DIR是 AM 下的 build 目录。
 
 在 Makefile 中有
 
+```makefile
 $(LIBS): %:
  @$(MAKE) -s -C $(AM_HOME)/$* archive
+```
 
 它会把我们自己写的库函数（如 klib）打包成 archive。
 
 在 Makefile 中有
 
+```makefile
 $(IMAGE).elf: $(OBJS) am $(LIBS)
  @echo + LD "->" $(IMAGE_REL).elf
  @$(LD) $(LDFLAGS) -o $(IMAGE).elf --start-group $(LINKAGE) --end-group
+```
 
 它会将所有的 .o 文件全部链接起来生成一个 .elf 文件。这里的 $(OBJS) 的生成方法不难：将 SRC 中所有的 .c 换成了 .o，加上相对应的路径前缀即可。
 
 在 nemu.mk 中有
 
+```makefile
 image: $(IMAGE).elf
  @$(OBJDUMP) -d $(IMAGE).elf > $(IMAGE).txt
  @echo + OBJCOPY "->" $(IMAGE_REL).bin
  @$(OBJCOPY) -S --set-section-flags .bss=alloc,contents -O binary $(IMAGE).elf $(IMAGE).bin
+```
 
 它使用 OBJCOPY 命令将 .elf 文件中的一些节做了修改，然后粘贴进了 .bin 文件中。
 
 在 nemu.mk 中有
 
+```makefile
 run: image
  $(MAKE) -C $(NEMU_HOME) ISA=$(ISA) run ARGS="$(NEMUFLAGS)" IMG=$(IMAGE).bin
+```
 
 它相当于在 $NEMU_HOME 目录下使用了命令 make ISA=riscv32 run ARGS=... IMG=...，这样就实现了将镜像加载到 nemu 上运行。
 
