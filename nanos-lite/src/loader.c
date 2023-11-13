@@ -50,7 +50,7 @@ static uintptr_t loader(PCB* pcb, const char* filename) {
     uint32_t vaddr = phdr.p_vaddr;
     uint32_t mem_size = phdr.p_memsz;
 
-    printf("load program from [%p, %p] to [%p, %p]\n", offset, file_size, vaddr, mem_size);
+    //printf("load program from [%p, %p] to [%p, %p]\n", offset, file_size, vaddr, mem_size);
 
     ramdisk_read((void*)vaddr, offset, file_size);
     //fs_lseek(fd, offset, SEEK_SET);
