@@ -5,23 +5,27 @@
 static Context* (*user_handler)(Event, Context*) = NULL;
 
 void display_context(Context* c) {
-  for (int i = 0; i < sizeof(c->gpr) / sizeof(c->gpr[0]); ++i) printf("x%p is %p\n", i, c->gpr[i]);
+  for (int i = 0; i < sizeof(c->gpr) / sizeof(c->gpr[0]); ++i) printf("x%d is %p\n", i, c->gpr[i]);
   printf("mcause, mstatus, mepc is %p, %p, %p\n", c->mcause, c->mstatus, c->mepc);
 }
 
 Context* __am_irq_handle(Context* c) {
   if (user_handler) {
     Event ev = {0};
-    //display_context(c);
     switch (c->mcause) {
       case -1:
         ev.event = EVENT_YIELD;
+        c->mepc += 4;
+        break;
+      case 0 ... 19:
+        ev.event = EVENT_SYSCALL;
+        c->mepc += 4;
         break;
       default:
         ev.event = EVENT_ERROR;
         break;
     }
-
+    //display_context(c);
     c = user_handler(ev, c);
     assert(c != NULL);
   }
