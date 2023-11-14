@@ -3,8 +3,10 @@
 
 #include <common.h>
 
+size_t fs_write(int fd, const void* buf, size_t count);
+
 #ifndef SEEK_SET
-enum {SEEK_SET, SEEK_CUR, SEEK_END};
+enum { SEEK_SET, SEEK_CUR, SEEK_END };
 #endif
 
 #endif

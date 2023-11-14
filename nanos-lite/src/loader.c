@@ -43,7 +43,7 @@ static uintptr_t loader(PCB* pcb, const char* filename) {
     //fs_read(fd, &phdr, sizeof(phdr));
     if (phdr.p_type != PT_LOAD) continue;
 
-    printf("load program header %d", i);
+    //printf("load program header %d", i);
 
     uint32_t offset = phdr.p_offset;
     uint32_t file_size = phdr.p_filesz;

@@ -1,10 +1,15 @@
 #include "syscall.h"
 
 #include <assert.h>
+#include <setjmp.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
+
+#define true (1)
+#define false (0)
 
 // helper macros
 #define _concat(x, y) x##y
@@ -46,7 +51,12 @@
 #error _syscall_ is not implemented
 #endif
 
+#define PG_SHIFT 12
+#define PG_SIZE (1 << 12)
+#define PG_MASK (~0xfff)
+
 intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
+  // printf("brk is here\n");
   register intptr_t _gpr1 asm(GPR1) = type;
   register intptr_t _gpr2 asm(GPR2) = a0;
   register intptr_t _gpr3 asm(GPR3) = a1;
@@ -57,45 +67,60 @@ intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
 }
 
 void _exit(int status) {
-  _syscall_(SYS_exit, status, 0, 0);
+  _syscall_((intptr_t)SYS_exit, (intptr_t)status, 0, 0);
   while (1)
     ;
 }
 
 int _open(const char* path, int flags, mode_t mode) {
-  _exit(SYS_open);
-  return 0;
+  return _syscall_((intptr_t)SYS_open, (intptr_t)path, (intptr_t)flags, (intptr_t)mode);
 }
 
 int _write(int fd, void* buf, size_t count) {
-  _exit(SYS_write);
-  return 0;
+  return _syscall_((intptr_t)SYS_write, (intptr_t)fd, (intptr_t)buf, (intptr_t)count);
 }
 
-void* _sbrk(intptr_t increment) { return (void*)-1; }
+void* _sbrk(intptr_t increment) {
+  extern char end;
+  static intptr_t p_brk = 0;
+  if (p_brk == 0) {
+    p_brk = (intptr_t)&end;
+    _syscall_((intptr_t)SYS_brk, (intptr_t)p_brk, 0, 0);
+    // p_brk = (p_brk & 0xfff) ? ((p_brk & ~0xfff) + PG_SIZE) : p_brk;
+    // return (void *)-1;
+  }
+
+  void* old_brk = (void*)p_brk;
+  // char buf[32];
+  // sprintf(buf, "new brk is %p\n", (void *)(p_brk + increment));
+  // write(1, buf, 32);
+  if (_syscall_((intptr_t)SYS_brk, (intptr_t)(p_brk + increment), 0, 0) != 0) return (void*)-1;
+  p_brk = p_brk + increment;
+  // char buf[32];
+  // sprintf(buf, "p_brk is %p\n", (void *)(p_brk));
+  // write(1, buf, 32);
+  return old_brk;
+}
 
 int _read(int fd, void* buf, size_t count) {
-  _exit(SYS_read);
-  return 0;
+  return _syscall_((intptr_t)SYS_read, (intptr_t)fd, (intptr_t)buf, (intptr_t)count);
 }
 
-int _close(int fd) {
-  _exit(SYS_close);
-  return 0;
-}
+int _close(int fd) { return _syscall_((intptr_t)SYS_close, (intptr_t)fd, 0, 0); }
 
 off_t _lseek(int fd, off_t offset, int whence) {
-  _exit(SYS_lseek);
-  return 0;
+  return _syscall_((intptr_t)SYS_lseek, (intptr_t)fd, (intptr_t)offset, (intptr_t)whence);
 }
 
 int _gettimeofday(struct timeval* tv, struct timezone* tz) {
-  _exit(SYS_gettimeofday);
+  //  printf("syscall is %d\n", SYS_gettimeofday);
+  _syscall_((intptr_t)SYS_gettimeofday, (intptr_t)tv, (intptr_t)tz, 0);
   return 0;
 }
 
 int _execve(const char* fname, char* const argv[], char* const envp[]) {
-  _exit(SYS_execve);
+  // printf("_execve %s\n", argv[0]);
+  _syscall_((intptr_t)SYS_execve, (intptr_t)fname, (intptr_t)argv, (intptr_t)envp);
   return 0;
 }
 
