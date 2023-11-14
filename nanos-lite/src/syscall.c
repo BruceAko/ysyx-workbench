@@ -1,49 +1,49 @@
+#include "syscall.h"
+
 #include <common.h>
 #include <fs.h>
 #include <memory.h>
 
 void exit(int status);
 
-enum {
-  SYS_exit = 0,
-  SYS_yield,
-  SYS_open,
-  SYS_read,
-  SYS_write,
-  SYS_kill,
-  SYS_getpid,
-  SYS_close,
-  SYS_lseek,
-  SYS_brk,
-  SYS_fstat,
-  SYS_time,
-  SYS_signal,
-  SYS_execve,
-  SYS_fork,
-  SYS_link,
-  SYS_unlink,
-  SYS_wait,
-  SYS_times,
-  SYS_gettimeofday
-};
-
 void do_syscall(Context* c) {
   uintptr_t a[4];
   a[0] = c->GPR1;
-  //printf("Syscall No. %d\n", a[0]);
+  a[1] = c->GPR2;
+  a[2] = c->GPR3;
+  a[3] = c->GPR4;
+
   switch (a[0]) {
     case SYS_exit:
-      exit((int)c->GPR2);
+      exit((int)a[1]);
       break;
     case SYS_yield:
       yield();
       c->GPRx = 0;
       break;
+    case SYS_open:
+      c->GPRx = fs_open((const char*)a[1], (int)a[2], (int)a[3]);
+      break;
     case SYS_write:
-      c->GPRx = fs_write(c->GPR2, (void*)(c->GPR3), c->GPR4);
+      c->GPRx = fs_write((int)a[1], (const void*)a[2], (size_t)a[3]);
+      break;
+    case SYS_read:
+      c->GPRx = fs_read((int)a[1], (void*)a[2], (size_t)a[3]);
+      break;
+    case SYS_lseek:
+      c->GPRx = fs_lseek((int)a[1], (size_t)a[2], (int)a[3]);
+      break;
+    case SYS_close:
+      c->GPRx = fs_close((int)a[1]);
+      break;
+    case SYS_execve:
+      // c->GPRx = execve((const char*)a[1], (char** const)a[2], (char** const)a[3]);
       break;
     case SYS_brk:
-      c->GPRx = (int)mm_brk((uintptr_t)c->GPR2);
+      c->GPRx = (int)mm_brk((uintptr_t)a[1]);
+      break;
+    case SYS_gettimeofday:
+      // c->GPRx = (int)gettimeofday((Timeval*)a[1], (Timezone*)a[2]);
       break;
     default:
       panic("Unhandled syscall ID = %d", a[0]);
