@@ -2,9 +2,29 @@
 
 #include <common.h>
 #include <fs.h>
-#include <memory.h>
+#include <proc.h>
 
-void exit(int status);
+typedef struct timeval {
+  int32_t tv_sec;  /* seconds */
+  int32_t tv_usec; /* microseconds */
+} Timeval;
+typedef struct timezone {
+  int tz_minuteswest; /* minutes west of Greenwich */
+  int tz_dsttime;     /* type of DST correction */
+} Timezone;
+
+static AM_TIMER_UPTIME_T uptime;
+
+static int gettimeofday(Timeval* tv, Timezone* tz) {
+  ioe_read(AM_TIMER_UPTIME, &uptime);
+  // important: must convert to int32_t as tv_usec/sec is int32_t
+  //            uptime.us is uint64_t, cause overflow!!!!!!!!!!!
+  //            make the tv_sec is always 0.....
+  tv->tv_usec = (int32_t)uptime.us;
+  tv->tv_sec = (int32_t)uptime.us / 1000000;
+  // printf("sec is %d, usec is %d\n",tv->tv_sec,tv->tv_usec);
+  return 0;
+}
 
 void do_syscall(Context* c) {
   uintptr_t a[4];
@@ -43,7 +63,7 @@ void do_syscall(Context* c) {
       c->GPRx = (int)mm_brk((uintptr_t)a[1]);
       break;
     case SYS_gettimeofday:
-      // c->GPRx = (int)gettimeofday((Timeval*)a[1], (Timezone*)a[2]);
+      c->GPRx = (int)gettimeofday((Timeval*)a[1], (Timezone*)a[2]);
       break;
     default:
       panic("Unhandled syscall ID = %d", a[0]);
