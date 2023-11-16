@@ -4,10 +4,6 @@
 #define min(x, y) ((x < y) ? x : y)
 #define NR_SPECIAL 3
 
-size_t ramdisk_read(void* buf, size_t offset, size_t len);
-size_t ramdisk_write(const void* buf, size_t offset, size_t len);
-size_t serial_write(const void* buf, size_t offset, size_t len);
-
 typedef size_t (*ReadFn)(void* buf, size_t offset, size_t len);
 typedef size_t (*WriteFn)(const void* buf, size_t offset, size_t len);
 
@@ -37,6 +33,9 @@ static Finfo file_table[] __attribute__((used)) = {
     [FD_STDIN] = {"stdin", 0, 0, invalid_read, invalid_write},
     [FD_STDOUT] = {"stdout", 0, 0, invalid_read, serial_write},
     [FD_STDERR] = {"stderr", 0, 0, invalid_read, serial_write},
+    {"/dev/events", 0, 0, events_read, invalid_write},
+    {"/proc/dispinfo", 50, 0, dispinfo_read, invalid_write},
+    {"/dev/fb", 0, 0, invalid_read, fb_write},
 #include "files.h"
 };
 
@@ -46,6 +45,11 @@ void init_fs() {
     if (file_table[fd].read == NULL) file_table[fd].read = ramdisk_read;
   }
   // initialize the size of /dev/fb
+  AM_GPU_CONFIG_T gpu_config;
+  ioe_read(AM_GPU_CONFIG, &gpu_config);
+  int width = gpu_config.width, height = gpu_config.height;
+  int fb_fd = fs_open("/dev/fb", 0, 0);
+  file_table[fb_fd].size = width * height;
 }
 
 int fs_open(const char* pathname, int flags, int mode) {
