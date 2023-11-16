@@ -73,6 +73,7 @@
 #endif
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -126,41 +127,50 @@ typedef __uint128_t fixedptud;
 #define fixedpt_tofloat(T) ((float)((T) * ((float)(1) / (float)(1L << FIXEDPT_FBITS))))
 
 /* Multiplies a fixedpt number with an integer, returns the result. */
-static inline fixedpt fixedpt_muli(fixedpt A, int B) { return 0; }
+static inline fixedpt fixedpt_muli(fixedpt A, int B) { return (A * B); }
 
 /* Divides a fixedpt number with an integer, returns the result. */
-static inline fixedpt fixedpt_divi(fixedpt A, int B) { return 0; }
+static inline fixedpt fixedpt_divi(fixedpt A, int B) { return A / B; }
 
 /* Multiplies two fixedpt numbers, returns the result. */
-static inline fixedpt fixedpt_mul(fixedpt A, fixedpt B) { return 0; }
+static inline fixedpt fixedpt_mul(fixedpt A, fixedpt B) { return (A * B) >> FIXEDPT_FBITS; }
 
 /* Divides two fixedpt numbers, returns the result. */
-static inline fixedpt fixedpt_div(fixedpt A, fixedpt B) { return 0; }
+static inline fixedpt fixedpt_div(fixedpt A, fixedpt B) { return A / B << FIXEDPT_FBITS; }
 
-static inline fixedpt fixedpt_abs(fixedpt A) { return 0; }
+static inline fixedpt fixedpt_abs(fixedpt A) { return abs(A); }
 
-static inline fixedpt fixedpt_floor(fixedpt A) { return 0; }
+static inline fixedpt fixedpt_floor(fixedpt A) {
+  if (fixedpt_fracpart(A) == 0) return A;
 
-static inline fixedpt fixedpt_ceil(fixedpt A) { return 0; }
+  return fixedpt_fromint(fixedpt_toint(A));
+}
+
+static inline fixedpt fixedpt_ceil(fixedpt A) {
+  if (fixedpt_fracpart(A) == 0) return A;
+
+  fixedpt_fromint(fixedpt_toint(A) + 1);
+  return 0;
+}
 
 /*
- * Note: adding and substracting fixedpt numbers can be done by using
- * the regular integer operators + and -.
- */
+	 * Note: adding and substracting fixedpt numbers can be done by using
+	 * the regular integer operators + and -.
+	 */
 
 /**
- * Convert the given fixedpt number to a decimal string.
- * The max_dec argument specifies how many decimal digits to the right
- * of the decimal point to generate. If set to -1, the "default" number
- * of decimal digits will be used (2 for 32-bit fixedpt width, 10 for
- * 64-bit fixedpt width); If set to -2, "all" of the digits will
- * be returned, meaning there will be invalid, bogus digits outside the
- * specified precisions.
- */
+	 * Convert the given fixedpt number to a decimal string.
+	 * The max_dec argument specifies how many decimal digits to the right
+	 * of the decimal point to generate. If set to -1, the "default" number
+	 * of decimal digits will be used (2 for 32-bit fixedpt width, 10 for
+	 * 64-bit fixedpt width); If set to -2, "all" of the digits will
+	 * be returned, meaning there will be invalid, bogus digits outside the
+	 * specified precisions.
+	 */
 void fixedpt_str(fixedpt A, char* str, int max_dec);
 
 /* Converts the given fixedpt number into a string, using a static
- * (non-threadsafe) string buffer */
+	 * (non-threadsafe) string buffer */
 static inline char* fixedpt_cstr(const fixedpt A, const int max_dec) {
   static char str[25];
 
@@ -171,8 +181,8 @@ static inline char* fixedpt_cstr(const fixedpt A, const int max_dec) {
 /* Returns the square root of the given number, or -1 in case of error */
 fixedpt fixedpt_sqrt(fixedpt A);
 
-/* Returns the sine of the given fixedpt number. 
- * Note: the loss of precision is extraordinary! */
+/* Returns the sine of the given fixedpt number.
+	 * Note: the loss of precision is extraordinary! */
 fixedpt fixedpt_sin(fixedpt fp);
 
 /* Returns the cosine of the given fixedpt number */
